@@ -1,5 +1,6 @@
 <?php
 include 'dbyhteys.php';
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -11,26 +12,34 @@ include 'dbyhteys.php';
     <title>TAItter</title>
 </head>
 <body>
-    <div id="login">             <!-- Kirjautuminen -->
-        <button id="loginButton" onclick="
-            document.querySelector('#loginButton').style.display = 'none';      // Piilotetaan login-nappi
-            document.querySelector('#loginForm').style.display = 'block';       // ja näytetään login-form
-            ">Login
-        </button>
-        <form id="loginForm" action="login.php" method="POST" style="display: none">
-            <input id ="inputbox" type="text" name="name" id="name">
-            <input id ="inputbox" type="password" name="password" id="password">
-            <input id ="sendbutton" type="submit" value="Login">
-        </form>
-    </div>
-    <div id="logout">
+    <?php
+    if ($_SESSION == null) {
+        ?>
+        <div id="login">             <!-- Kirjautuminen -->
+            <button id="loginButton" onclick="
+                document.querySelector('#loginButton').style.display = 'none';      // Piilotetaan login-nappi
+                document.querySelector('#loginForm').style.display = 'block';       // ja näytetään login-form
+                ">Login
+            </button>
+            <form id="loginForm" action="login.php" method="POST" style="display: none">
+                <input id ="inputbox" type="text" name="name" id="name">
+                <input id ="inputbox" type="password" name="password" id="password">
+                <input id ="sendbutton" type="submit" value="Login">
+            </form>
+        </div>
+    <?php
+    }
+    if (isset($_SESSION["user"])) {
+        ?>
         <form action="logout.php" method="POST">
-            <input type="submit" value="Logout">
+            <input id="logout" type="submit" value="Logout">
         </form>
+        <?php
+    }
+    ?>
 
     <div id="user">              <!-- Käyttäjän tiedot -->
         <?php
-            session_start();
             if (isset($_SESSION["user"])) {
                 echo "Logged in as " . $_SESSION["user"]["name"];
             }
