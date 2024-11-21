@@ -1,0 +1,52 @@
+body {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-image: url('./pics/frogger.jpg');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Indie Flower', cursive;
+}
+
+.login {
+    padding: 40px;
+}
+
+.loginButton{
+    margin-top: 20px;
+    background-color: rgb(73, 230, 230);
+    width: 70px;
+    height: 40px;
+    font-size: 1.5vw;
+    color: rgb(140, 0, 255);
+    border-radius: 5px;
+    border: none;
+}
+
+.user {
+    color:#db0000;
+    font-size: xx-large;
+}
+
+.post{
+    background-color: rgb(55, 64, 94);
+    color: #FFFF;
+    border: solid 0.1vh black;
+    margin: 10px;
+    border-radius: 0.4vh;
+}
+
+#sendbutton{
+    background-color: rgb(73, 230, 230);
+    border: none;
+    border-radius: 0.1vh;
+}
+
+.contentRow {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px;
+    text-align: center;
+}
