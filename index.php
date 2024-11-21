@@ -7,11 +7,33 @@ include 'dbyhteys.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>TAItter</title>
 </head>
-<body>                           <!-- Haetaan viestit databasesta -->
+<body>
+    <div class="login">             <!-- Kirjautuminen -->
+        <button class="loginButton" onclick="
+            document.querySelector('.loginButton').style.display = 'none';      // Piilotetaan login-nappi
+            document.querySelector('.loginForm').style.display = 'block';       // ja näytetään login-form
+            ">Login
+        </button>
+        <form class="loginForm" action="login.php" method="POST" style="display: none">
+            <input type="text" name="name" id="name">
+            <input type="password" name="password" id="password">
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <div class="user">              <!-- Käyttäjän tiedot -->
+        <?php
+            session_start();
+            if (isset($_SESSION["user"])) {
+                echo "Logged in as " . $_SESSION["user"]["name"];
+            }
+        ?>
+    </div>
     
-    <div class="posts">
+    <div class="posts">             <!-- Haetaan viestit databasesta -->
         <?php
             
           $posts = $conn->query("SELECT * FROM `posts`")->fetchAll();
