@@ -9,7 +9,7 @@ include 'dbyhteys.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TAItter</title>
 </head>
-<body>
+<body>                           <!-- Haetaan viestit databasesta -->
     
     <div class="posts">
         <?php
@@ -26,6 +26,15 @@ include 'dbyhteys.php';
           }
 
         ?>
+    </div>                         <!-- Viestien lähettäminen -->
+
+    <div class="sendbox">
+        <form action="sendpost.php" method="POST">
+            <input type="hidden" name="sender" value="1">       <!-- Käyttäjän id pitää hakee tähän-->
+            <input type="text" name="content" id="content">
+            <input type="submit" value="Send">
+        </form>
     </div>
+
 </body>
 </html>
