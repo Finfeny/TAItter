@@ -10,11 +10,11 @@ body {
     font-family: 'Indie Flower', cursive;
 }
 
-.login {
+#login {
     padding: 40px;
 }
 
-.loginButton{
+#loginButton{
     margin-top: 20px;
     background-color: rgb(73, 230, 230);
     width: 70px;
@@ -25,7 +25,7 @@ body {
     border: none;
 }
 
-.user {
+#user {
     color:#db0000;
     font-size: xx-large;
 }
