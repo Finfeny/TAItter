@@ -43,6 +43,20 @@ session_start();
             if (isset($_SESSION["user"])) {
                 echo "Logged in as " . $_SESSION["user"]["name"];
             }
+            else {
+                ?>
+                <button id="registerButton" onclick="
+                    document.querySelector('#registerButton').style.display = 'none';
+                    document.querySelector('#registerForm').style.display = 'block';
+                    ">Register
+                </button>
+                <form action="register.php" method="POST" id="registerForm" style="display: none">
+                    <input id ="inputbox" type="text" name="name" id="name">
+                    <input id ="inputbox" type="password" name="password" id="password">
+                    <input id ="sendbutton" type="submit" value="Register">
+                </form>
+                <?php
+            }
         ?>
     </div>
     
@@ -64,7 +78,7 @@ session_start();
                     this.closest('.post').querySelector('.editForm').style.display = 'block';
                     this.closest('.post').querySelector('.editContent').value = this.closest('.post').querySelector('.postContent').innerText;
                     this.closest('.post').querySelector('.editId').value = this.closest('.post').querySelector('.postDelete input').value;
-                    ">EEddit
+                    ">Edit
                 </button>
                 <form class="editForm" action="editpost.php" method="POST" style="display: none">
                     <input class="editContent" type="text" name="content" id="content">
