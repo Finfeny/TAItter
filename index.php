@@ -22,8 +22,8 @@ session_start();
                 ">Login
             </button>
             <form id="loginForm" action="login.php" method="POST" style="display: none">
-                <input id ="inputbox" type="text" name="name" id="name">
-                <input id ="inputbox" type="password" name="password" id="password">
+                <input class ="inputbox" type="text" name="name" id="name">
+                <input class ="inputbox" type="password" name="password" id="password">
                 <input id ="sendbutton" type="submit" value="Login">
             </form>
         </div>
@@ -51,8 +51,8 @@ session_start();
                     ">Register
                 </button>
                 <form action="register.php" method="POST" id="registerForm" style="display: none">
-                    <input id ="inputbox" type="text" name="name" id="name">
-                    <input id ="inputbox" type="password" name="password" id="password">
+                    <input class ="inputbox" type="text" name="name" id="name">
+                    <input class ="inputbox" type="password" name="password" id="password">
                     <input id ="sendbutton" type="submit" value="Register">
                 </form>
                 <?php
@@ -105,9 +105,9 @@ session_start();
     if (isset($_SESSION["user"])) {
         ?>
         <div id="sendbox">
-            <form action="sendpost.php" method="POST">
+            <form action="sendpost.php" method="POST" id="sendboxBox">
                 <input type="hidden" name="sender" value="<?php echo $_SESSION["user"]["id"] ?>">
-                <input id ="sendInputbox" type="text" name="content" id="content">
+                <textarea rows="2" cols="25" id ="sendInputbox" type="text" name="content" id="content"></textarea>
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
         </div>
