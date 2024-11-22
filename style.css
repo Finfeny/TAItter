@@ -108,3 +108,24 @@ body {
     margin: 10px;
     text-align: center;
 }
+
+.dropdown-menu {
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown-menu div {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.dropdown-menu div:hover {
+    background-color: #f0f0f0;
+}
