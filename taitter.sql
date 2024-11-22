@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 21.11.2024 klo 09:22
--- Palvelimen versio: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Nov 22, 2024 at 08:51 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Rakenne taululle `posts`
+-- Table structure for table `posts`
 --
 
 CREATE TABLE `posts` (
@@ -34,7 +34,7 @@ CREATE TABLE `posts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Vedos taulusta `posts`
+-- Dumping data for table `posts`
 --
 
 INSERT INTO `posts` (`id`, `content`, `sender`) VALUES
@@ -44,7 +44,7 @@ INSERT INTO `posts` (`id`, `content`, `sender`) VALUES
 -- --------------------------------------------------------
 
 --
--- Rakenne taululle `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -54,12 +54,12 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Vedos taulusta `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `password`) VALUES
-(1, 'Vili', '123'),
-(2, 'Lauri', '223');
+(1, 'Vili', '$2y$10$Y7rkIYTAL1UR9ohF10JLhOlhbGQH71iNYR47fdBp9UFLxyUhPV262'),
+(2, 'Lauri', '$2y$10$Fl1bHSpC9Y39TdAN4ot01ebmrVFbLJbgAkzyjj4EcIKyz8mNBro0i');
 
 --
 -- Indexes for dumped tables
@@ -95,11 +95,11 @@ ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Rajoitteet vedostauluille
+-- Constraints for dumped tables
 --
 
 --
--- Rajoitteet taululle `posts`
+-- Constraints for table `posts`
 --
 ALTER TABLE `posts`
   ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`sender`) REFERENCES `users` (`id`);
