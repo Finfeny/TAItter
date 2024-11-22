@@ -17,8 +17,17 @@ body {
 #loginButton {
     margin-top: 20px;
     background-color: rgb(73, 230, 230);
-    width: 70px;
-    height: 40px;
+    padding: 10px;
+    font-size: 1.5vw;
+    color: rgb(140, 0, 255);
+    border-radius: 5px;
+    border: none;
+}
+
+#logoutButton {
+    margin-top: 20px;
+    background-color: rgb(73, 230, 230);
+    padding: 10px;
     font-size: 1.5vw;
     color: rgb(140, 0, 255);
     border-radius: 5px;
@@ -28,8 +37,7 @@ body {
 #registerButton {
     margin-block: 20px;
     background-color: rgb(73, 230, 230);
-    width: 70px;
-    height: 40px;
+    padding: 10px;
     font-size: 1.5vw;
     color: rgb(140, 0, 255);
     border-radius: 5px;
@@ -64,10 +72,34 @@ body {
     border-radius: 0.4vh;
 }
 
+#inputbox {
+    color: #FFFF;
+    background-color: rgb(55, 64, 94);
+    width: 20%;
+    /* height: 68px; */
+    border-radius: 0.1vh;
+    border-radius: 0.4vh;
+    border: solid 0.1vh black;
+    font-family: 'Indie Flower', cursive;
+}
+
+#sendInputbox {
+    color: #FFFF;
+    background-color: rgb(55, 64, 94);
+    width: 50%;
+    height: 68px;
+    border-radius: 0.1vh;
+    border-radius: 0.4vh;
+    border: solid 0.1vh black;
+    font-family: 'Indie Flower', cursive;
+}
+
 #sendbutton{
     background-color: rgb(73, 230, 230);
     border: none;
     border-radius: 0.1vh;
+    height: 30px;
+    width: 50px;
 }
 
 .contentRow {

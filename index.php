@@ -32,7 +32,7 @@ session_start();
     if (isset($_SESSION["user"])) {
         ?>
         <form action="logout.php" method="POST">
-            <input id="logout" type="submit" value="Logout">
+            <input id="logoutButton" type="submit" value="Logout">
         </form>
         <?php
     }
@@ -107,7 +107,7 @@ session_start();
         <div id="sendbox">
             <form action="sendpost.php" method="POST">
                 <input type="hidden" name="sender" value="<?php echo $_SESSION["user"]["id"] ?>">
-                <input id ="inputbox" type="text" name="content" id="content">
+                <input id ="sendInputbox" type="text" name="content" id="content">
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
         </div>
