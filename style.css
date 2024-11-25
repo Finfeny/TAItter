@@ -75,8 +75,9 @@ body {
 #sendboxBox {
     display: flex;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
     gap: 10px;
+    align-items: center;
 }
 
 #inputbox {
@@ -108,9 +109,9 @@ body {
     border: none;
     border-radius: 0.1vh;
     border-radius: 3px;
-    padding: 10px;
+    padding-inline: 20px;
+    padding-block: 10px;
     height: 50%;
-    align-self: center;
 }
 
 .contentRow {
@@ -121,15 +122,23 @@ body {
 }
 
 .dropdown-menu {
-    background-color: white;
-    border: 1px solid #ccc;
     max-height: 200px;
     overflow-y: auto;
-    width: 50%;
     margin-left: auto;
     margin-right: auto;
     display: none;
     z-index: 1000;
+    translate: 0px -47px;
+    width: 40%;
+    background-color: #404f82;
+    color: white;
+    border: solid 0.1vh black;
+    max-width: 350px;
+}
+
+.dropdown-menu div {
+    padding: 8px;
+    cursor: pointer;
 }
 
 .dropdown-menu div {
@@ -138,5 +147,5 @@ body {
 }
 
 .dropdown-menu div:hover {
-    background-color: #f0f0f0;
+    background-color: #36426b;;
 }

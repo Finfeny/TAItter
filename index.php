@@ -108,9 +108,9 @@ session_start();
             <form action="sendpost.php" method="POST" id="sendboxBox">
                 <input type="hidden" name="sender" value="<?php echo $_SESSION["user"]["id"] ?>">
                 <textarea rows="2" cols="25" id ="sendInputbox" type="text" name="content" id="content"></textarea>
-                <div id="dropdown" class="dropdown-menu"></div>
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
+            <div id="dropdown" class="dropdown-menu"></div>
         </div>
         <?php
     }
