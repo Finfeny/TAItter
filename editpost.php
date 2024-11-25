@@ -5,7 +5,9 @@ var_dump($_POST);
 $id = $_POST["id"];
 $content = $_POST["content"];
 if ($content) {
-$conn->query("UPDATE `posts` SET `content` = '$content' WHERE `id` = $id");
+$query = $conn->prepare("UPDATE `posts` SET `content` = ? WHERE `id` = ?");
+$query->execute([$content, $id]);
+// var_dump($query);
 }
 header("Location: index.php");
 ?>
