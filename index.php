@@ -108,7 +108,16 @@ session_start();
         <div id="sendbox">
             <form action="sendpost.php" method="POST" id="sendboxBox">
                 <input type="hidden" name="sender" value="<?php echo $_SESSION["user"]["id"] ?>">
-                <textarea rows="2" cols="25" id ="sendInputbox" type="text" name="content" id="content"></textarea>
+                <textarea
+                    rows="2"
+                    cols="25"
+                    id ="sendInputbox"
+                    type="text"
+                    name="content"
+                    id="content"
+                    maxlength="144"
+                    placeholder="Limit is 144 characters">
+                </textarea>
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
             <div id="dropdown" class="dropdown-menu"></div>
