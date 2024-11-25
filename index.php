@@ -22,8 +22,8 @@ session_start();
                 ">Login
             </button>
             <form id="loginForm" action="login.php" method="POST" style="display: none">
-                <input class ="inputbox" type="text" name="name" id="name">
-                <input class ="inputbox" type="password" name="password" id="password">
+                <input class ="inputbox" type="email" name="email" id="email" placeholder="Email">
+                <input class ="inputbox" type="password" name="password" id="password" placeholder="Password">
                 <input id ="sendbutton" type="submit" value="Login">
             </form>
         </div>
@@ -51,8 +51,9 @@ session_start();
                     ">Register
                 </button>
                 <form action="register.php" method="POST" id="registerForm" style="display: none">
-                    <input class ="inputbox" type="text" name="name" id="name">
-                    <input class ="inputbox" type="password" name="password" id="password">
+                    <input class ="inputbox" type="text" name="name" id="name" placeholder="Name">
+                    <input class ="inputbox" type="email" name="email" id="email" placeholder="Email">
+                    <input class ="inputbox" type="password" name="password" id="password" placeholder="Password">
                     <input id ="sendbutton" type="submit" value="Register">
                 </form>
                 <?php

@@ -1,11 +1,11 @@
 <?php
 include 'dbyhteys.php';
 
-$name = $_POST["name"];
 $password = $_POST["password"];
+$email = $_POST["email"];
 
-$user = $conn->prepare("SELECT * FROM `users` WHERE `name` = :name");
-$user->execute(["name" => $name]);
+$user = $conn->prepare("SELECT * FROM `users` WHERE `email` = :email" );
+$user->execute(["email" => $email]);
 $user = $user->fetch();
 
 if (password_verify($password, $user['password'])) {
