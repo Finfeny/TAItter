@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2024 at 10:14 AM
+-- Generation Time: Nov 25, 2024 at 01:21 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,17 +30,18 @@ SET time_zone = "+00:00";
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `content` varchar(255) NOT NULL,
-  `sender` int(11) NOT NULL
+  `sender` int(11) NOT NULL,
+  `tag` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`id`, `content`, `sender`) VALUES
-(1, 'moikku', 1),
-(2, 'väsy', 2),
-(12, 'Hei', 2);
+INSERT INTO `posts` (`id`, `content`, `sender`, `tag`) VALUES
+(1, 'moikku', 1, 0),
+(2, 'väsy', 2, 0),
+(12, 'Hei', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -74,7 +75,8 @@ INSERT INTO `users` (`id`, `name`, `password`, `email`) VALUES
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `sender` (`sender`);
+  ADD KEY `sender` (`sender`),
+  ADD KEY `tags` (`tag`);
 
 --
 -- Indexes for table `users`
