@@ -110,9 +110,62 @@ session_start();
                 <textarea rows="2" cols="25" id ="sendInputbox" type="text" name="content" id="content"></textarea>
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
+            <div id="dropdown" class="dropdown-menu"></div>
         </div>
         <?php
     }
     ?>
 </body>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const sendInputbox = document.getElementById("sendInputbox");
+        const dropdown = document.getElementById("dropdown");
+
+        sendInputbox.addEventListener("input", function () {
+            const cursorPosition = sendInputbox.selectionStart;
+            const textBeforeCursor = sendInputbox.value.slice(0, cursorPosition);
+
+            // Kattoo jos "@" on viestissä
+            const atIndex = textBeforeCursor.lastIndexOf("@");
+            if (atIndex !== -1) {
+                const query = textBeforeCursor.slice(atIndex + 1);
+
+                fetch(`fetch_users.php?query=${query}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Dropdowni
+                        dropdown.innerHTML = data
+                            .map((user) => `<div data-name="${user.name}">${user.name}</div>`)
+                            .join("");
+                        dropdown.style.display = "block";
+                    })
+                    .catch((error) => console.error("Error fetching users:", error));
+
+            } else {
+                dropdown.style.display = "none";
+            }
+        });
+
+        
+        dropdown.addEventListener("click", function (e) {       // laittaa käyttäjän nimen viestiin kun se valitaan
+            if (e.target.dataset.name) {
+                const cursorPosition = sendInputbox.selectionStart;
+                const textBeforeCursor = sendInputbox.value.slice(0, cursorPosition);
+                const atIndex = textBeforeCursor.lastIndexOf("@");
+
+                const newText =
+                    textBeforeCursor.slice(0, atIndex) +
+                    `@${e.target.dataset.name} ` +
+                    sendInputbox.value.slice(cursorPosition);
+                sendInputbox.value = newText;
+
+                dropdown.style.display = "none";
+            }
+        });
+    });
+  
+</script>
+
 </html>
