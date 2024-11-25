@@ -121,6 +121,7 @@ session_start();
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
             <div id="dropdown" class="dropdown-menu"></div>
+            <div id="alertbox">144 character limit reached</div>
         </div>
         <?php
     }
@@ -136,6 +137,7 @@ session_start();
         sendInputbox.addEventListener("input", function () {
             const cursorPosition = sendInputbox.selectionStart;
             const textBeforeCursor = sendInputbox.value.slice(0, cursorPosition);
+            const inputField = document.getElementById("sendInputbox");
 
             // Kattoo jos "@" on viestissä
             const atIndex = textBeforeCursor.lastIndexOf("@");
@@ -155,6 +157,14 @@ session_start();
 
             } else {
                 dropdown.style.display = "none";
+            }
+            
+            if (inputField.value.length >= inputField.getAttribute("maxlength")) {
+                document.getElementById("alertbox").style.display = "block"
+            } else if (inputField.value.length <= inputField.getAttribute("maxlength")) {
+                document.getElementById("alertbox").style.display = "none"
+            } else if (maxlength) {
+                alert("s")
             }
         });
 
