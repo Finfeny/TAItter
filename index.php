@@ -60,6 +60,21 @@ session_start();
             }
         ?>
     </div>
+    <div id="Filters">
+        <select id="filterSelect">                                               <!-- Haku ja filtteröinti -->
+            <option value="" disabled selected>Filter</option>
+            <option value="Kaikki">Kaikki</option>
+            <option value="Maininnat">Maininnat</option>
+        </select>
+        <div id="search">
+            <input id="searchInput" type="text" placeholder="Search">
+            <button id="searchButton">Search</button>
+        </div>
+        <select id="sortSelect" onChange="sortSelect()">
+            <option value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
+        </select>
+    </div>
     
     <div id="posts">             <!-- Haetaan viestit databasesta -->
         <?php
@@ -90,7 +105,7 @@ session_start();
             }
             echo "<div class='postContent'>" . $post["content"] . "</div>";     // Viestin sisältö
             if (isset($_SESSION["user"]["id"]) && $post["sender"] == $_SESSION["user"]["id"]) {
-                ?>                                                            <!-- Viestin poisto -->
+                ?>
                 <form class="postDelete" action="deletepost.php" method="POST">
                     <input type="hidden" name="id" value="<?php echo $post['id'] ?>">
                     <input type="submit" value="Delete">
@@ -116,8 +131,8 @@ session_start();
                     name="content"
                     id="content"
                     maxlength="144"
-                    placeholder="Limit is 144 characters">
-                </textarea>
+                    placeholder="Limit is 144 characters"
+                    ></textarea>
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
             <div id="dropdown" class="dropdown-menu"></div>
@@ -129,6 +144,17 @@ session_start();
 </body>
 
 <script>
+
+    function sortSelect() {
+        const sortSelectValue = document.getElementById("sortSelect").value;
+        
+        if (sortSelectValue == "Oldest") {
+            document.getElementById("posts").style.flexDirection = "column";
+            
+        } else if (sortSelectValue == "Newest") {
+            document.getElementById("posts").style.flexDirection = "column-reverse";
+        }
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
         const sendInputbox = document.getElementById("sendInputbox");

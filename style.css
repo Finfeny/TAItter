@@ -64,6 +64,16 @@ body {
     font-size: xx-large;
 }
 
+#Filters {
+    display: flex;
+    justify-content: space-around;
+}
+
+#posts {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
 .post{
     background-color: rgb(55, 64, 94);
     color: #FFFF;
