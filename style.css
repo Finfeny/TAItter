@@ -3,7 +3,7 @@ body {
     flex-direction: column;
     text-align: center;
     background-image: url('./pics/frogger.jpg');
-    /* background-image: url('./pics/image-cache.jpg'); */
+    background-image: url('./pics/image-cache.jpg');
     background-size: cover;
     background-position: center;
     margin: 0;
@@ -93,7 +93,16 @@ body {
     border-radius: 0.4vh;
 }
 
-#sendboxBox {
+#sendbox {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(33, 41, 68);
+    padding-block: 10px;
+}
+
+#sendboxForm {
     display: flex;
     justify-content: center;
     flex-direction: column;
