@@ -3,11 +3,13 @@ body {
     flex-direction: column;
     text-align: center;
     background-image: url('./pics/frogger.jpg');
+    /* background-image: url('./pics/image-cache.jpg'); */
     background-size: cover;
     background-position: center;
     margin: 0;
     min-height: 100vh;
     font-family: 'Indie Flower', cursive;
+    color: #FFFF;
 }
 
 #login {
@@ -69,6 +71,16 @@ body {
     justify-content: space-around;
 }
 
+#searchInput {
+    background-color: rgb(55, 64, 94);
+    width: 73%;
+    color: #FFFF;
+    border-radius: 0.1vh;
+    border-radius: 0.4vh;
+    border: solid 0.1vh black;
+    font-family: 'Indie Flower', cursive;
+}
+
 #posts {
     display: flex;
     flex-direction: column-reverse;
@@ -76,7 +88,6 @@ body {
 
 .post{
     background-color: rgb(55, 64, 94);
-    color: #FFFF;
     border: solid 0.1vh black;
     margin: 10px;
     border-radius: 0.4vh;
@@ -91,7 +102,6 @@ body {
 }
 
 #inputbox {
-    color: #FFFF;
     background-color: rgb(55, 64, 94);
     width: 20%;
     /* height: 68px; */
@@ -102,7 +112,6 @@ body {
 }
 
 #sendInputbox {
-    color: #FFFF;
     background-color: rgb(98, 116, 177);
     width: 40%;
     max-width: 350px;
@@ -112,6 +121,7 @@ body {
     border: solid 0.1vh black;
     font-family: 'Indie Flower', cursive;
     resize: none;
+    color: #FFFF;
 }
 
 #sendbutton{
@@ -141,7 +151,6 @@ body {
     translate: 0px -48px;
     width: 40%;
     background-color: #404f82;
-    color: white;
     border: solid 0.1vh black;
     max-width: 350px;
 }
@@ -156,7 +165,6 @@ body {
     translate: 0px -48px;
     width: 40%;
     background-color: #404f82;
-    color: white;
     border: solid 0.1vh black;
     max-width: 350px;
 }

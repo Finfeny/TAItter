@@ -60,21 +60,28 @@ session_start();
             }
         ?>
     </div>
-    <div id="Filters">
-        <select id="filterSelect">                                               <!-- Haku ja filtteröinti -->
-            <option value="" disabled selected>Filter</option>
-            <option value="Kaikki">Kaikki</option>
-            <option value="Maininnat">Maininnat</option>
-        </select>
-        <div id="search">
-            <input id="searchInput" type="text" placeholder="Search">
-            <button id="searchButton">Search</button>
+    <?php
+    if ($_SESSION != null) {
+        ?>
+        <div id="Filters">
+            <select id="filterSelect" onChange="filterSelect()">                     <!-- Haku ja filtteröinti -->
+                <option value="" disabled selected>Filter</option>
+                <option value="All">All</option>
+                <option value="Mentions">Mentions</option>
+                <option value="Mentioned">Mentioned</option>
+            </select>
+            <div id="search">
+                <input id="searchInput" type="text" placeholder="Search by #tags or @users ">
+                <button id="searchButton">Search</button>
+            </div>
+            <select id="sortSelect" onChange="sortSelect()">
+                <option value="Newest">Newest</option>
+                <option value="Oldest">Oldest</option>
+            </select>
         </div>
-        <select id="sortSelect" onChange="sortSelect()">
-            <option value="Newest">Newest</option>
-            <option value="Oldest">Oldest</option>
-        </select>
-    </div>
+        <?php
+    }
+    ?>
     
     <div id="posts">             <!-- Haetaan viestit databasesta -->
         <?php
@@ -117,6 +124,7 @@ session_start();
 
         ?>
     </div>                         <!-- Viestien lähettäminen -->
+    <div id="messageBox"></div>
     <?php
     if (isset($_SESSION["user"])) {
         ?>
@@ -144,6 +152,44 @@ session_start();
 </body>
 
 <script>
+
+    function filterSelect() {
+        const filterSelectValue = document.getElementById("filterSelect").value;
+        const posts = document.querySelectorAll(".post");
+        let gotPosts = false;
+        document.getElementById("messageBox").innerText = "";
+        
+
+        posts.forEach((post) => {
+            const content = post.querySelector(".postContent").innerText;
+            const allMentions = content.match(/@(\w+)/g) || [];
+            const tags = content.match(/#(\w+)/g) || [];
+            const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");
+
+            if (filterSelectValue == "All") {
+                post.style.display = "block";
+                gotPosts = true;
+            }
+            else if (filterSelectValue == "Mentions") {
+                if (allMentions.length == 0) {
+                    post.style.display = "none";
+                } else {
+                    post.style.display = "block";
+                    gotPosts = true;
+                }
+            } else if (filterSelectValue == "Mentioned") {
+                if (currentUserMentions.length == 0) {
+                    post.style.display = "none";
+                } else {
+                    post.style.display = "block";
+                    gotPosts = true;
+                }
+            }
+        });
+        if (gotPosts == false) {
+            document.getElementById("messageBox").innerText = "No posts found";
+        }
+    }
 
     function sortSelect() {
         const sortSelectValue = document.getElementById("sortSelect").value;
