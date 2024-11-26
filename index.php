@@ -161,12 +161,12 @@ session_start();
         
 
         posts.forEach((post) => {
-            const content = post.querySelector(".postContent").innerText;
-            const allMentions = content.match(/@(\w+)/g) || [];
-            const tags = content.match(/#(\w+)/g) || [];
-            const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");
+            const content = post.querySelector(".postContent").innerText;           // Viestin sisältö
+            const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
+            const tags = content.match(/#(\w+)/g) || [];                            // Kaikki tagit
+            const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");     // Käyttäjän maininnat
 
-            if (filterSelectValue == "All") {
+            if (filterSelectValue == "All") {           //Vaihtoehdot filtteröintiin
                 post.style.display = "block";
                 gotPosts = true;
             }
@@ -187,7 +187,7 @@ session_start();
             }
         });
         if (gotPosts == false) {
-            document.getElementById("messageBox").innerText = "No posts found";
+            document.getElementById("messageBox").innerText = "No posts found";           //Jos ei oo käyttäjii ni näytetään viesti
         }
     }
 
