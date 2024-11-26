@@ -27,37 +27,59 @@ session_start();
                 <input id ="sendbutton" type="submit" value="Login">
             </form>
         </div>
-    <?php
-    }
-    if (isset($_SESSION["user"])) {
-        ?>
-        <form action="logout.php" method="POST">
-            <input id="logoutButton" type="submit" value="Logout">
-        </form>
         <?php
     }
     ?>
-
-    <div id="user">              <!-- Käyttäjän tiedot -->
+    <div id="topbar">                               <!-- Yläinfot -->
         <?php
-            if (isset($_SESSION["user"])) {
-                echo "Logged in as " . $_SESSION["user"]["name"];
-            }
-            else {
-                ?>
-                <button id="registerButton" onclick="
-                    document.querySelector('#registerButton').style.display = 'none';
-                    document.querySelector('#registerForm').style.display = 'block';
-                    ">Register
-                </button>
-                <form action="register.php" method="POST" id="registerForm" style="display: none">
-                    <input class ="inputbox" type="text" name="name" id="name" placeholder="Name">
-                    <input class ="inputbox" type="email" name="email" id="email" placeholder="Email">
-                    <input class ="inputbox" type="password" name="password" id="password" placeholder="Password">
-                    <input id ="sendbutton" type="submit" value="Register">
-                </form>
-                <?php
-            }
+        if (isset($_SESSION["user"])) {
+            ?>
+            <form action="logout.php" method="POST">
+                <input id="logoutButton" type="submit" value="Logout">
+            </form>
+            <?php
+        }
+        ?>
+        <div id="user">                             <!-- Käyttäjän tiedot -->
+            <?php
+                if (isset($_SESSION["user"])) {
+                    echo "Logged in as " . $_SESSION["user"]["name"];
+                }
+                else {
+                    ?>
+                    <button id="registerButton" onclick="
+                        document.querySelector('#registerButton').style.display = 'none';
+                        document.querySelector('#registerForm').style.display = 'block';
+                        ">Register
+                    </button>
+                    <form action="register.php" method="POST" id="registerForm" style="display: none">
+                        <input class ="inputbox" type="text" name="name" id="name" placeholder="Name">
+                        <input class ="inputbox" type="email" name="email" id="email" placeholder="Email">
+                        <input class ="inputbox" type="password" name="password" id="password" placeholder="Password">
+                        <input id ="sendbutton" type="submit" value="Register">
+                    </form>
+                    <?php
+                }
+            ?>
+        </div>
+        <?php
+        if (isset($_SESSION["user"])) {                                     // Käyttäjien ja postausten vaihtaminen
+            ?>
+            <button class="showButton" id="showUserButton" onclick="
+                document.querySelector('#showUserButton').style.display = 'none';
+                document.querySelector('#showPostsButton').style.display = 'block';
+                document.querySelector('#posts').style.display = 'none';
+                document.querySelector('#showUserForm').style.display = 'block';
+                ">Show users
+            </button>
+            <button class="showButton" id="showPostsButton" style="display: none" onclick="
+                document.querySelector('#showUserButton').style.display = 'block';
+                document.querySelector('#showPostsButton').style.display = 'none';
+                document.querySelector('#posts').style.display = 'flex';
+                document.querySelector('#showUserForm').style.display = 'none';
+                ">Show posts
+            <?php
+        }
         ?>
     </div>
     <?php
@@ -71,7 +93,7 @@ session_start();
                 <option value="Mentioned">Mentioned</option>
             </select>
             <div id="search">
-                <input id="searchInput" type="text" placeholder="Search by #tags or @users ">
+                <input id="searchInput" type="text" placeholder="Search posts by @users ">
                 <button id="searchButton">Search</button>
             </div>
             <select id="sortSelect" onChange="sortSelect()">
@@ -82,6 +104,22 @@ session_start();
         <?php
     }
     ?>
+
+    <div id="users">
+        <?php
+        if (isset($_SESSION["user"])) {
+            $users = $conn->query("SELECT * FROM `users`")->fetchAll();           // Haetaan käyttäjät databasesta
+            foreach ($users as $user) {
+                echo "<div class='user'>" . $user["name"] . "<br><div class='userDescription'>" .
+                $user["description"];
+                if ($user["description"] == null) {
+                    echo "No description";
+                }
+                echo "<br>" . $user["creation_date"] . "</div></div>";
+            }
+        }
+        ?>
+    </div>
     
     <div id="posts">             <!-- Haetaan viestit databasesta -->
         <?php

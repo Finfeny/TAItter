@@ -27,6 +27,22 @@ body {
     border: none;
 }
 
+#topbar {
+    display: flex;
+    justify-content: space-around;
+    padding-block: 20px;
+}
+
+.showButton {
+    margin-top: 20px;
+    background-color: rgb(73, 230, 230);
+    padding: 10px;
+    font-size: 1.5vw;
+    color: rgb(140, 0, 255);
+    border-radius: 5px;
+    border: none;
+}
+
 #logoutButton {
     margin-top: 20px;
     background-color: rgb(73, 230, 230);
@@ -51,40 +67,57 @@ body {
     width: 50px;
 }
 
-/* #logout {
-    margin-top: 20px;
-    background-color: rgb(73, 230, 230);
-    width: 70px;
-    height: 40px;
-    font-size: 1.5vw;
-    color: rgb(140, 0, 255);
-    border-radius: 5px;
-    border: none;
-} */
-
 #user {
     color:#db0000;
     font-size: xx-large;
+    padding: 10px;
 }
 
 #Filters {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    padding-block: 20px;
 }
 
 #searchInput {
     background-color: rgb(55, 64, 94);
-    width: 73%;
+    width: 63%;
     color: #FFFF;
     border-radius: 0.1vh;
     border-radius: 0.4vh;
     border: solid 0.1vh black;
     font-family: 'Indie Flower', cursive;
+    padding: 3px;
+}
+
+#users {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 70px;
+    padding-inline: 100px;
+}
+
+.user {
+    font-size: xx-large;
+    background-color: rgb(55, 64, 94);
+    padding: 20px;
+    max-width: 300px;
+    border-radius: 0.4vh;
+    border: solid 0.1vh black;
+}
+
+.userDescription {
+    font-size: large;
+    display: flex;
+    align-items: center;
+    height: 70%;
 }
 
 #posts {
     display: flex;
     flex-direction: column-reverse;
+    padding-bottom: 160px;
 }
 
 .post{
