@@ -69,14 +69,14 @@ session_start();
                 document.querySelector('#showUserButton').style.display = 'none';
                 document.querySelector('#showPostsButton').style.display = 'block';
                 document.querySelector('#posts').style.display = 'none';
-                document.querySelector('#showUserForm').style.display = 'block';
+                document.querySelector('#users').style.display = 'flex';
                 ">Show users
             </button>
             <button class="showButton" id="showPostsButton" style="display: none" onclick="
                 document.querySelector('#showUserButton').style.display = 'block';
                 document.querySelector('#showPostsButton').style.display = 'none';
                 document.querySelector('#posts').style.display = 'flex';
-                document.querySelector('#showUserForm').style.display = 'none';
+                document.querySelector('#users').style.display = 'none';
                 ">Show posts
             <?php
         }
@@ -105,10 +105,10 @@ session_start();
     }
     ?>
 
-    <div id="users">
+    <div id="users" style="display: none">             <!-- Show users -->
         <?php
         if (isset($_SESSION["user"])) {
-            $users = $conn->query("SELECT * FROM `users`")->fetchAll();           // Haetaan käyttäjät databasesta
+            $users = $conn->query("SELECT * FROM `users`")->fetchAll();
             foreach ($users as $user) {
                 echo "<div class='user'>" . $user["name"] . "<br><div class='userDescription'>" .
                 $user["description"];
