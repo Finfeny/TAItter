@@ -123,13 +123,13 @@ session_start();
           }
 
         ?>
-    </div>                         <!-- Viestien lähettäminen -->
-    <div id="messageBox"></div>
+    </div>
+    <h1 id="messageBox"></h1>                                         <!-- Virheilmoitukset -->
     <?php
     if (isset($_SESSION["user"])) {
         ?>
-        <div id="sendbox">
-            <form action="sendpost.php" method="POST" id="sendboxBox">
+        <div id="sendbox">                                              <!-- Viestin lähetys -->
+            <form action="sendpost.php" method="POST" id="sendboxForm">
                 <input type="hidden" name="sender" value="<?php echo $_SESSION["user"]["id"] ?>">
                 <textarea
                     rows="2"
