@@ -70,6 +70,9 @@ session_start();
                 document.querySelector('#showPostsButton').style.display = 'block';
                 document.querySelector('#posts').style.display = 'none';
                 document.querySelector('#users').style.display = 'flex';
+                document.querySelector('#postFilters').style.display = 'none';
+                document.querySelector('#userFilters').style.display = 'flex';
+                document.querySelector('#sendbox').style.display = 'none';
                 ">Show users
             </button>
             <button class="showButton" id="showPostsButton" style="display: none" onclick="
@@ -77,6 +80,9 @@ session_start();
                 document.querySelector('#showPostsButton').style.display = 'none';
                 document.querySelector('#posts').style.display = 'flex';
                 document.querySelector('#users').style.display = 'none';
+                document.querySelector('#postFilters').style.display = 'flex';
+                document.querySelector('#userFilters').style.display = 'none';
+                document.querySelector('#sendbox').style.display = 'block';
                 ">Show posts
             <?php
         }
@@ -85,21 +91,25 @@ session_start();
     <?php
     if ($_SESSION != null) {
         ?>
-        <div id="Filters">
-            <select id="filterSelect" onChange="filterSelect()">                     <!-- Haku ja filtteröinti -->
+        <div class="filter" id="postFilters">
+            <select id="filterSelect" onChange="filterSelect()">                     <!-- Postausten haku ja filtteröinti -->
                 <option value="" disabled selected>Filter</option>
                 <option value="All">All</option>
                 <option value="Mentions">Mentions</option>
                 <option value="Mentioned">Mentioned</option>
+                <option value="ShowUserPosts" type="hidden">ShowUserPosts</option>
             </select>
-            <div id="search">
-                <input id="searchInput" type="text" placeholder="Search posts by @users ">
-                <button id="searchButton">Search</button>
-            </div>
+            <form action="search_posts.php" method="POST">
+                <input class="searchInput" type="text" name="search" id="postSearchInput" placeholder="Search posts by @users">
+                <input type="submit" value="Search">
+            </form>
             <select id="sortSelect" onChange="sortSelect()">
                 <option value="Newest">Newest</option>
                 <option value="Oldest">Oldest</option>
             </select>
+        </div>
+        <div class="filter" id="userFilters" style="display: none">
+            <input class="searchInput" type="text" name="search" id="userSearchInput" placeholder="Search users">
         </div>
         <?php
     }
@@ -109,13 +119,25 @@ session_start();
         <?php
         if (isset($_SESSION["user"])) {
             $users = $conn->query("SELECT * FROM `users`")->fetchAll();
+
             foreach ($users as $user) {
-                echo "<div class='user'>" . $user["name"] . "<br><div class='userDescription'>" .
+                
+                echo "<div class='user' onClick='showUserPosts()'>" . $user["name"] . "<br><div class='userDescription'>" .
                 $user["description"];
                 if ($user["description"] == null) {
                     echo "No description";
                 }
-                echo "<br>" . $user["creation_date"] . "</div></div>";
+
+                echo "<br>" . count($conn->query("SELECT * FROM `follows` WHERE `followed_id` = " . $user["id"])->fetchAll()). " followers<br>";
+                echo count($conn->query("SELECT * FROM `follows` WHERE `follower_id` = " . $user["id"])->fetchAll()). " following<br>";
+                
+                if ($user["creation_date"] != null) {
+                echo "<br>account created at: " . $user["creation_date"];
+                }
+
+                echo "<br>" . count($conn->query("SELECT * FROM `posts` WHERE `sender` = " . $user["id"])->fetchAll()). " posts";   // Käyttäjän postaukset
+
+                echo "</div></div>";
             }
         }
         ?>
@@ -191,7 +213,25 @@ session_start();
 
 <script>
 
-    function filterSelect() {
+    function showUserPosts() {
+        let user = event.target.parentElement.firstChild.data;
+        if (user == "             ") {
+            user = event.target.firstChild.data;
+        }
+        document.querySelector('#showUserButton').style.display = 'none';
+        document.querySelector('#showPostsButton').style.display = 'block';
+        document.querySelector('#posts').style.display = 'flex';
+        document.querySelector('#users').style.display = 'none';
+        document.querySelector('#postFilters').style.display = 'flex';
+        document.querySelector('#userFilters').style.display = 'none';
+        document.querySelector('#sendbox').style.display = 'block';
+        
+        document.getElementById("filterSelect").value = "ShowUserPosts";
+        filterSelect(user);
+    }
+
+    function filterSelect(user) {
+        console.log(user);
         const filterSelectValue = document.getElementById("filterSelect").value;
         const posts = document.querySelectorAll(".post");
         let gotPosts = false;
@@ -199,6 +239,8 @@ session_start();
         
 
         posts.forEach((post) => {
+            console.log(post.firstChild.data);
+            const postSender = post.firstChild.data;                           // Viestin lähettäjä
             const content = post.querySelector(".postContent").innerText;           // Viestin sisältö
             const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
             const tags = content.match(/#(\w+)/g) || [];                            // Kaikki tagit
@@ -221,6 +263,13 @@ session_start();
                 } else {
                     post.style.display = "block";
                     gotPosts = true;
+                }
+            } else if (filterSelectValue == "ShowUserPosts") {
+                if (postSender.includes(user)) {
+                    post.style.display = "block";
+                    gotPosts = true;
+                } else {
+                    post.style.display = "none";
                 }
             }
         });
@@ -295,6 +344,63 @@ session_start();
             }
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const userSearchInput = document.getElementById("userSearchInput");
+    const usersDiv = document.getElementById("users");
+
+    userSearchInput.addEventListener("input", function () {
+        const query = userSearchInput.value.trim();
+
+        fetch(`fetch_users.php?query=${encodeURIComponent(query)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                // Clear the users div
+                usersDiv.innerHTML = "";
+
+                // Check for errors
+                if (data.error) {
+                    usersDiv.innerHTML = `<div>${data.error}</div>`;
+                    usersDiv.style.display = "block";
+                    return;
+                }
+
+                // Populate the users div with results
+                if (data.length > 0) {
+                    usersDiv.innerHTML = data
+                        .map(
+                            (user) => `
+                            <div class="user">
+                                <strong>${user.name}</strong>
+                                <div class="userDescription">
+                                    ${user.description || "No description"}
+                                    <br>
+                                    <br>
+                                    ${user.follower_count} followers<br>
+                                    ${user.following_count} following
+                                    <br>
+                                    <br>
+                                    ${user.creation_date ? `Account created at: ${user.creation_date}` : ""}
+                                </div>
+                            </div>
+                        `
+                        )
+                        .join("");
+                } else {
+                    usersDiv.innerHTML = "<div>No users found</div>";
+                }
+
+                usersDiv.style.display = "flex";
+            })
+            .catch((error) => {
+                console.error("Error fetching users:", error);
+                usersDiv.innerHTML = "<div>Failed to fetch users</div>";
+                usersDiv.style.display = "block";
+            });
+    });
+});
+
+
   
 </script>
 
