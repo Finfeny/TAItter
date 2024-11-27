@@ -5,5 +5,4 @@ Twitteri paisti yksjuttu
 
 lautin pyynnöt:
 
--paksummat postit
--
+-paksummat postaukset
