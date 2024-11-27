@@ -1,8 +1,8 @@
 # TAItter
 Twitteri paisti yksjuttu
 
+-delay hakuun
 
+# lautin pyynnöt:
 
--viestilimitti 144 merkkii
-
--salasanahashi
+-paksummat postaukset
