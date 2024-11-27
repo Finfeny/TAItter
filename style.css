@@ -3,8 +3,7 @@ body {
     flex-direction: column;
     text-align: center;
     background-image: url('./pics/frogger.jpg');
-    background-image: url('./pics/image-cache.jpg');
-    background-image: url('./pics/image-cache.jpg');
+    /* background-image: url('./pics/image-cache.jpg'); */
     background-size: cover;
     background-position: center;
     margin: 0;
@@ -73,13 +72,19 @@ body {
     padding: 10px;
 }
 
-#Filters {
+/* #userFilters {
+    display: flex;
+    justify-content: center;
+    padding-block: 20px;
+} */
+
+.filter {
     display: flex;
     justify-content: center;
     padding-block: 20px;
 }
 
-#searchInput {
+.searchInput {
     background-color: rgb(55, 64, 94);
     width: 63%;
     color: #FFFF;
@@ -96,6 +101,7 @@ body {
     flex-wrap: wrap;
     gap: 70px;
     padding-inline: 100px;
+    padding-bottom: 160px;
 }
 
 .user {
@@ -103,7 +109,7 @@ body {
     background-color: rgb(55, 64, 94);
     padding: 20px;
     max-width: 300px;
-    border-radius: 0.4vh;
+    border-radius: 0.8vh;
     border: solid 0.1vh black;
 }
 

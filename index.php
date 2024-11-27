@@ -70,6 +70,10 @@ session_start();
                 document.querySelector('#showPostsButton').style.display = 'block';
                 document.querySelector('#posts').style.display = 'none';
                 document.querySelector('#users').style.display = 'flex';
+                document.querySelector('#postFilters').style.display = 'none';
+                document.querySelector('#userFilters').style.display = 'flex';
+                document.querySelector('#sendbox').style.display = 'none';
+                SearchUsers()
                 ">Show users
             </button>
             <button class="showButton" id="showPostsButton" style="display: none" onclick="
@@ -77,6 +81,9 @@ session_start();
                 document.querySelector('#showPostsButton').style.display = 'none';
                 document.querySelector('#posts').style.display = 'flex';
                 document.querySelector('#users').style.display = 'none';
+                document.querySelector('#postFilters').style.display = 'flex';
+                document.querySelector('#userFilters').style.display = 'none';
+                document.querySelector('#sendbox').style.display = 'block';
                 ">Show posts
             <?php
         }
@@ -85,41 +92,31 @@ session_start();
     <?php
     if ($_SESSION != null) {
         ?>
-        <div id="Filters">
-            <select id="filterSelect" onChange="filterSelect()">                     <!-- Haku ja filtteröinti -->
+        <div class="filter" id="postFilters">
+            <select id="filterSelect" onChange="filterSelect()">                     <!-- Postausten haku ja filtteröinti -->
                 <option value="" disabled selected>Filter</option>
                 <option value="All">All</option>
                 <option value="Mentions">Mentions</option>
                 <option value="Mentioned">Mentioned</option>
+                <option value="ShowUserPosts" style="display: none">ShowUserPosts</option>
             </select>
-            <div id="search">
-                <input id="searchInput" type="text" placeholder="Search posts by @users ">
-                <button id="searchButton">Search</button>
-            </div>
+            <form action="search_posts.php" method="POST">
+                <input class="searchInput" type="text" name="search" id="postSearchInput" placeholder="Search posts by @users">
+                <input type="submit" value="Search">
+            </form>
             <select id="sortSelect" onChange="sortSelect()">
                 <option value="Newest">Newest</option>
                 <option value="Oldest">Oldest</option>
             </select>
         </div>
+        <div class="filter" id="userFilters" style="display: none">
+            <input class="searchInput" type="text" name="search" id="userSearchInput" placeholder="Search users">
+        </div>
         <?php
     }
     ?>
 
-    <div id="users" style="display: none">             <!-- Show users -->
-        <?php
-        if (isset($_SESSION["user"])) {
-            $users = $conn->query("SELECT * FROM `users`")->fetchAll();
-            foreach ($users as $user) {
-                echo "<div class='user'>" . $user["name"] . "<br><div class='userDescription'>" .
-                $user["description"];
-                if ($user["description"] == null) {
-                    echo "No description";
-                }
-                echo "<br>" . $user["creation_date"] . "</div></div>";
-            }
-        }
-        ?>
-    </div>
+    <div id="users" style="display: none"></div>             <!-- Show users -->
     
     <div id="posts">             <!-- Haetaan viestit databasesta -->
         <?php
@@ -191,7 +188,22 @@ session_start();
 
 <script>
 
-    function filterSelect() {
+    function showUserPosts(user) {             // Näyttää käyttäjän postaukset
+
+        document.querySelector('#showUserButton').style.display = 'none';
+        document.querySelector('#showPostsButton').style.display = 'block';
+        document.querySelector('#posts').style.display = 'flex';
+        document.querySelector('#users').style.display = 'none';
+        document.querySelector('#postFilters').style.display = 'flex';
+        document.querySelector('#userFilters').style.display = 'none';
+        document.querySelector('#sendbox').style.display = 'block';
+        
+        document.getElementById("filterSelect").value = "ShowUserPosts";
+        filterSelect(user);
+    }
+
+    function filterSelect(user) {
+        // console.log(user);
         const filterSelectValue = document.getElementById("filterSelect").value;
         const posts = document.querySelectorAll(".post");
         let gotPosts = false;
@@ -199,6 +211,7 @@ session_start();
         
 
         posts.forEach((post) => {
+            const postSender = post.firstChild.data;                           // Viestin lähettäjä
             const content = post.querySelector(".postContent").innerText;           // Viestin sisältö
             const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
             const tags = content.match(/#(\w+)/g) || [];                            // Kaikki tagit
@@ -222,6 +235,13 @@ session_start();
                     post.style.display = "block";
                     gotPosts = true;
                 }
+            } else if (filterSelectValue == "ShowUserPosts") {
+                if (postSender.includes(user)) {
+                    post.style.display = "block";
+                    gotPosts = true;
+                } else {
+                    post.style.display = "none";
+                }
             }
         });
         if (gotPosts == false) {
@@ -240,10 +260,11 @@ session_start();
         }
     }
 
+    
     document.addEventListener("DOMContentLoaded", function () {
         const sendInputbox = document.getElementById("sendInputbox");
         const dropdown = document.getElementById("dropdown");
-
+        
         sendInputbox.addEventListener("input", function () {
             const cursorPosition = sendInputbox.selectionStart;
             const textBeforeCursor = sendInputbox.value.slice(0, cursorPosition);
@@ -259,13 +280,13 @@ session_start();
                     .then((data) => {
                         // Dropdowni
                         dropdown.innerHTML = data
-                            .map((user) => `<div data-name="${user.name}">${user.name}</div>`)
-                            .join("");
+                        .map((user) => `<div data-name="${user.name}">${user.name}</div>`)
+                        .join("");
                         dropdown.style.display = "block";
                     })
                     .catch((error) => console.error("Error fetching users:", error));
 
-            } else {
+                } else {
                 dropdown.style.display = "none";
             }
             
@@ -286,15 +307,86 @@ session_start();
                 const atIndex = textBeforeCursor.lastIndexOf("@");
 
                 const newText =
-                    textBeforeCursor.slice(0, atIndex) +
-                    `@${e.target.dataset.name} ` +
-                    sendInputbox.value.slice(cursorPosition);
+                textBeforeCursor.slice(0, atIndex) +
+                `@${e.target.dataset.name} ` +
+                sendInputbox.value.slice(cursorPosition);
                 sendInputbox.value = newText;
 
                 dropdown.style.display = "none";
             }
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const userSearchInput = document.getElementById("userSearchInput");
+    const usersDiv = document.getElementById("users");
+    
+    userSearchInput.addEventListener("input", function () {
+        const query = userSearchInput.value.trim();
+
+        fetch(`fetch_users.php?query=${encodeURIComponent(query)}`)
+            .then((response) => response.json())
+            .then((data) => {
+
+                // Clear the users div
+                usersDiv.innerHTML = "";
+
+                // Check for errors
+                if (data.error) {
+                    usersDiv.innerHTML = `<div>${data.error}</div>`;
+                    usersDiv.style.display = "block";
+                    return;
+                }
+
+                // Populate the users div with results
+                if (data.length > 0) {
+                    usersDiv.innerHTML = data
+                        .map(
+                            (user) => `
+                            <div class="user" onClick='showUserPosts("${user.name}")'>
+                                <strong>${user.name}</strong>
+                                <div class="userDescription">
+                                    ${user.description || "No description"}
+                                    <br>
+                                    <br>
+                                    ${user.follower_count} followers<br>
+                                    ${user.following_count} following
+                                    <br>
+                                    ${user.post_count} posts
+                                    <br>
+                                    ${user.creation_date ? `Account created at: ${user.creation_date}` : ""}
+                                </div>
+                            </div>
+                        `
+                        )
+                        .join("");
+                } else {
+                    usersDiv.innerHTML = "<div>No users found</div>";
+                }
+
+                usersDiv.style.display = "flex";
+            })
+            .catch((error) => {
+                console.error("Error fetching users:", error);
+                usersDiv.innerHTML = "<div>Failed to fetch users</div>";
+                usersDiv.style.display = "block";
+            });
+        });
+
+    // Define the SearchUsers function to clear input and trigger the input event
+    window.SearchUsers = function() {
+        const inputElement = document.getElementById("userSearchInput");
+
+        // Clear the value in the input
+        inputElement.value = "";
+
+        // Create and dispatch the input event to simulate user interaction
+        const event = new Event('input');
+        inputElement.dispatchEvent(event);  // This triggers the event listener
+    };
+});
+
+
   
 </script>
 
