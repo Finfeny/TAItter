@@ -1,5 +1,8 @@
 <?php
 header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once 'dbyhteys.php';
 
 if (isset($_GET['query'])) {
@@ -7,11 +10,9 @@ if (isset($_GET['query'])) {
 
     try {
         if ($query == "") {
-            // $stmt = $conn->prepare("SELECT id, name, description, creation_date FROM users LIMIT 10");
-            $stmt = $conn->prepare("SELECT id, name, description, creation_date FROM users");
+            $stmt = $conn->prepare("SELECT id, name, description, creation_date FROM users LIMIT 100");
         } else {
-            // $stmt = $conn->prepare("SELECT id, name, description, creation_date FROM users WHERE name LIKE :query LIMIT 10");
-            $stmt = $conn->prepare("SELECT id, name, description, creation_date FROM users WHERE name LIKE :query");
+            $stmt = $conn->prepare("SELECT id, name, description, creation_date FROM users WHERE name LIKE :query LIMIT 100");
             $searchTerm = "%" . $query . "%";
             $stmt->bindParam(':query', $searchTerm, PDO::PARAM_STR);
         }

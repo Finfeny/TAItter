@@ -73,6 +73,7 @@ session_start();
                 document.querySelector('#postFilters').style.display = 'none';
                 document.querySelector('#userFilters').style.display = 'flex';
                 document.querySelector('#sendbox').style.display = 'none';
+                SearchUsers()
                 ">Show users
             </button>
             <button class="showButton" id="showPostsButton" style="display: none" onclick="
