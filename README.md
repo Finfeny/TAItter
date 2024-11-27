@@ -3,6 +3,6 @@ Twitteri paisti yksjuttu
 
 -delay hakuun
 
-lautin pyynnöt:
+# lautin pyynnöt:
 
 -paksummat postaukset
