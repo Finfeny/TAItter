@@ -217,33 +217,46 @@ session_start();
             const tags = content.match(/#(\w+)/g) || [];                            // Kaikki tagit
             const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");     // Käyttäjän maininnat
 
-            if (filterSelectValue == "All") {           //Vaihtoehdot filtteröintiin
+            switch (filterSelectValue) {
+                
+            case "All":
+                //Vaihtoehdot filtteröintiin
                 post.style.display = "block";
                 gotPosts = true;
-            }
-            else if (filterSelectValue == "Mentions") {
+                break;
+            
+            case "Mentions": 
                 if (allMentions.length == 0) {
                     post.style.display = "none";
+                    break;
+
                 } else {
                     post.style.display = "block";
                     gotPosts = true;
-                }
-            } else if (filterSelectValue == "Mentioned") {
+                    break;
+                } 
+
+            case "Mentioned":
                 if (currentUserMentions.length == 0) {
-                    post.style.display = "none";
+                    post.style.display = "none";   
+                    break;
                 } else {
                     post.style.display = "block";
                     gotPosts = true;
+                    break;
                 }
-            } else if (filterSelectValue == "ShowUserPosts") {
+
+            case "ShowUserPosts":
                 if (postSender.includes(user)) {
                     post.style.display = "block";
                     gotPosts = true;
+                    break;
+
                 } else {
                     post.style.display = "none";
+                    break;
                 }
-            }
-        });
+        }});
         if (gotPosts == false) {
             document.getElementById("messageBox").innerText = "No posts found";           //Jos ei oo käyttäjii ni näytetään viesti
         }
@@ -251,13 +264,18 @@ session_start();
 
     function sortSelect() {
         const sortSelectValue = document.getElementById("sortSelect").value;
-        
-        if (sortSelectValue == "Oldest") {
-            document.getElementById("posts").style.flexDirection = "column";
+
+        switch (sortSelectValue) {
             
-        } else if (sortSelectValue == "Newest") {
+        case "Oldest": 
+            document.getElementById("posts").style.flexDirection = "column";
+            break;
+            
+        case "Newest":
             document.getElementById("posts").style.flexDirection = "column-reverse";
-        }
+            break;
+        
+    }
     }
 
     
@@ -294,8 +312,6 @@ session_start();
                 document.getElementById("alertbox").style.display = "block"
             } else if (inputField.value.length <= inputField.getAttribute("maxlength")) {
                 document.getElementById("alertbox").style.display = "none"
-            } else if (maxlength) {
-                alert("s")
             }
         });
 
