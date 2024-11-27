@@ -3,8 +3,7 @@ body {
     flex-direction: column;
     text-align: center;
     background-image: url('./pics/frogger.jpg');
-    background-image: url('./pics/image-cache.jpg');
-    background-image: url('./pics/image-cache.jpg');
+    /* background-image: url('./pics/image-cache.jpg'); */
     background-size: cover;
     background-position: center;
     margin: 0;
@@ -110,7 +109,7 @@ body {
     background-color: rgb(55, 64, 94);
     padding: 20px;
     max-width: 300px;
-    border-radius: 0.4vh;
+    border-radius: 0.8vh;
     border: solid 0.1vh black;
 }
 

@@ -115,33 +115,7 @@ session_start();
     }
     ?>
 
-    <div id="users" style="display: none">             <!-- Show users -->
-        <?php
-        if (isset($_SESSION["user"])) {
-            $users = $conn->query("SELECT * FROM `users`")->fetchAll();
-
-            foreach ($users as $user) {
-                
-                echo "<div class='user' onClick='showUserPosts()'>" . $user["name"] . "<br><div class='userDescription'>" .
-                $user["description"];
-                if ($user["description"] == null) {
-                    echo "No description";
-                }
-
-                echo "<br>" . count($conn->query("SELECT * FROM `follows` WHERE `followed_id` = " . $user["id"])->fetchAll()). " followers<br>";
-                echo count($conn->query("SELECT * FROM `follows` WHERE `follower_id` = " . $user["id"])->fetchAll()). " following<br>";
-                
-                if ($user["creation_date"] != null) {
-                echo "<br>account created at: " . $user["creation_date"];
-                }
-
-                echo "<br>" . count($conn->query("SELECT * FROM `posts` WHERE `sender` = " . $user["id"])->fetchAll()). " posts";   // Käyttäjän postaukset
-
-                echo "</div></div>";
-            }
-        }
-        ?>
-    </div>
+    <div id="users" style="display: none"></div>             <!-- Show users -->
     
     <div id="posts">             <!-- Haetaan viestit databasesta -->
         <?php
@@ -213,23 +187,7 @@ session_start();
 
 <script>
 
-    function showUserPosts() {             // Näyttää käyttäjän postaukset
-
-        let userParent = event.target.parentElement;
-
-        console.log("userParent", userParent, userParent.className == "user"); //user
-        console.log("desc", event.target.parentElement.firstChild); //desci
-        console.log("haettu desc", event.target.parentElement.firstElementChild.firstChild) // toimii kaikkii muihi paitsi perus desc
-
-        //se menee ekaa jos on hakenu käyttäjää ja jos ei hae ni otsikon classname on users ja descin user
-        if (userParent.firstChild.data == "\n                                ") {
-            console.log("haettu")
-            user = userParent.firstElementChild.firstChild.data
-        } else if (userParent.className != "user") {
-            user = event.target.firstChild.data
-        } else if (userParent.className == "user") { 
-            user = userParent.firstChild.data
-        }
+    function showUserPosts(user) {             // Näyttää käyttäjän postaukset
 
         document.querySelector('#showUserButton').style.display = 'none';
         document.querySelector('#showPostsButton').style.display = 'block';
@@ -301,10 +259,11 @@ session_start();
         }
     }
 
+    
     document.addEventListener("DOMContentLoaded", function () {
         const sendInputbox = document.getElementById("sendInputbox");
         const dropdown = document.getElementById("dropdown");
-
+        
         sendInputbox.addEventListener("input", function () {
             const cursorPosition = sendInputbox.selectionStart;
             const textBeforeCursor = sendInputbox.value.slice(0, cursorPosition);
@@ -320,13 +279,13 @@ session_start();
                     .then((data) => {
                         // Dropdowni
                         dropdown.innerHTML = data
-                            .map((user) => `<div data-name="${user.name}">${user.name}</div>`)
-                            .join("");
+                        .map((user) => `<div data-name="${user.name}">${user.name}</div>`)
+                        .join("");
                         dropdown.style.display = "block";
                     })
                     .catch((error) => console.error("Error fetching users:", error));
 
-            } else {
+                } else {
                 dropdown.style.display = "none";
             }
             
@@ -347,9 +306,9 @@ session_start();
                 const atIndex = textBeforeCursor.lastIndexOf("@");
 
                 const newText =
-                    textBeforeCursor.slice(0, atIndex) +
-                    `@${e.target.dataset.name} ` +
-                    sendInputbox.value.slice(cursorPosition);
+                textBeforeCursor.slice(0, atIndex) +
+                `@${e.target.dataset.name} ` +
+                sendInputbox.value.slice(cursorPosition);
                 sendInputbox.value = newText;
 
                 dropdown.style.display = "none";
@@ -360,13 +319,14 @@ session_start();
     document.addEventListener("DOMContentLoaded", function () {
     const userSearchInput = document.getElementById("userSearchInput");
     const usersDiv = document.getElementById("users");
-
+    
     userSearchInput.addEventListener("input", function () {
         const query = userSearchInput.value.trim();
 
         fetch(`fetch_users.php?query=${encodeURIComponent(query)}`)
             .then((response) => response.json())
             .then((data) => {
+
                 // Clear the users div
                 usersDiv.innerHTML = "";
 
@@ -382,7 +342,7 @@ session_start();
                     usersDiv.innerHTML = data
                         .map(
                             (user) => `
-                            <div class="user" onClick='showUserPosts()'>
+                            <div class="user" onClick='showUserPosts("${user.name}")'>
                                 <strong>${user.name}</strong>
                                 <div class="userDescription">
                                     ${user.description || "No description"}
@@ -410,7 +370,19 @@ session_start();
                 usersDiv.innerHTML = "<div>Failed to fetch users</div>";
                 usersDiv.style.display = "block";
             });
-    });
+        });
+
+    // Define the SearchUsers function to clear input and trigger the input event
+    window.SearchUsers = function() {
+        const inputElement = document.getElementById("userSearchInput");
+
+        // Clear the value in the input
+        inputElement.value = "";
+
+        // Create and dispatch the input event to simulate user interaction
+        const event = new Event('input');
+        inputElement.dispatchEvent(event);  // This triggers the event listener
+    };
 });
 
 
