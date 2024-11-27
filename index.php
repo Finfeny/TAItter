@@ -97,7 +97,7 @@ session_start();
                 <option value="All">All</option>
                 <option value="Mentions">Mentions</option>
                 <option value="Mentioned">Mentioned</option>
-                <option value="ShowUserPosts" type="hidden">ShowUserPosts</option>
+                <option value="ShowUserPosts" style="display: none">ShowUserPosts</option>
             </select>
             <form action="search_posts.php" method="POST">
                 <input class="searchInput" type="text" name="search" id="postSearchInput" placeholder="Search posts by @users">
@@ -213,11 +213,24 @@ session_start();
 
 <script>
 
-    function showUserPosts() {
-        let user = event.target.parentElement.firstChild.data;
-        if (user == "             ") {
-            user = event.target.firstChild.data;
+    function showUserPosts() {             // Näyttää käyttäjän postaukset
+
+        let userParent = event.target.parentElement;
+
+        console.log("userParent", userParent, userParent.className == "user"); //user
+        console.log("desc", event.target.parentElement.firstChild); //desci
+        console.log("haettu desc", event.target.parentElement.firstElementChild.firstChild) // toimii kaikkii muihi paitsi perus desc
+
+        //se menee ekaa jos on hakenu käyttäjää ja jos ei hae ni otsikon classname on users ja descin user
+        if (userParent.firstChild.data == "\n                                ") {
+            console.log("haettu")
+            user = userParent.firstElementChild.firstChild.data
+        } else if (userParent.className != "user") {
+            user = event.target.firstChild.data
+        } else if (userParent.className == "user") { 
+            user = userParent.firstChild.data
         }
+
         document.querySelector('#showUserButton').style.display = 'none';
         document.querySelector('#showPostsButton').style.display = 'block';
         document.querySelector('#posts').style.display = 'flex';
@@ -231,7 +244,7 @@ session_start();
     }
 
     function filterSelect(user) {
-        console.log(user);
+        // console.log(user);
         const filterSelectValue = document.getElementById("filterSelect").value;
         const posts = document.querySelectorAll(".post");
         let gotPosts = false;
@@ -239,7 +252,6 @@ session_start();
         
 
         posts.forEach((post) => {
-            console.log(post.firstChild.data);
             const postSender = post.firstChild.data;                           // Viestin lähettäjä
             const content = post.querySelector(".postContent").innerText;           // Viestin sisältö
             const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
@@ -370,7 +382,7 @@ session_start();
                     usersDiv.innerHTML = data
                         .map(
                             (user) => `
-                            <div class="user">
+                            <div class="user" onClick='showUserPosts()'>
                                 <strong>${user.name}</strong>
                                 <div class="userDescription">
                                     ${user.description || "No description"}
@@ -379,6 +391,7 @@ session_start();
                                     ${user.follower_count} followers<br>
                                     ${user.following_count} following
                                     <br>
+                                    ${user.post_count} posts
                                     <br>
                                     ${user.creation_date ? `Account created at: ${user.creation_date}` : ""}
                                 </div>
