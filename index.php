@@ -126,7 +126,13 @@ session_start();
         foreach ($posts as $post) {
             echo "<div class='post'>";
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
-            echo $user["name"] . "<br><div class='contentRow'>";
+            echo "<div onClick='console.log(`follower " . $_SESSION["user"]["id"] . "\nfollowed " . $user["name"] . "`);";
+                // if (isset($_SESSION["user"])) {
+                //     $sql = "INSERT INTO `follows` (`follower`, `followed`) VALUES (:follower, :followed)";
+                //     $stmt = $conn->prepare($sql);
+                //     $stmt->execute(["follower" => $_SESSION["user"]["id"], "followed" => $user["name"]]);
+                // }
+            echo "'>" . $user["name"] . "</div>" . "<div class='contentRow'>";
             if (isset($_SESSION["user"]["id"]) && $post["sender"] == $_SESSION["user"]["id"]) {
                 ?>                                                              <!-- postauksen muokkaus -->
                 <button class="editButton" onclick="
@@ -188,6 +194,28 @@ session_start();
 
 <script>
 
+function followPostSender(senderName) {
+
+    fetch("follow.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ senderName: senderName }),
+    })
+
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.success) {
+            console.log("Followed post sender:", senderName);
+        } else {
+            console.error("Error following sender:", data.error);
+        }
+    })
+    .catch((error) => console.error("Request failed:", error));
+}
+
+
     function showUserPosts(user) {             // Näyttää käyttäjän postaukset
 
         document.querySelector('#showUserButton').style.display = 'none';
@@ -198,7 +226,9 @@ session_start();
         document.querySelector('#userFilters').style.display = 'none';
         document.querySelector('#sendbox').style.display = 'block';
         
-        document.getElementById("filterSelect").value = "ShowUserPosts";
+        document.getElementById("filterSelect").value = "ShowUserPosts";        // tää kyseinen vaihtaa filteri selectin valueks käyttäjän postaukset
+        document.getElementById("showPostsButton").style.display = "none";
+        document.getElementById("showUserButton").style.display = "block";
         filterSelect(user);
     }
 
@@ -344,17 +374,15 @@ session_start();
             .then((response) => response.json())
             .then((data) => {
 
-                // Clear the users div
                 usersDiv.innerHTML = "";
 
-                // Check for errors
                 if (data.error) {
                     usersDiv.innerHTML = `<div>${data.error}</div>`;
                     usersDiv.style.display = "block";
                     return;
                 }
 
-                // Populate the users div with results
+                // Näyttää käyttäjät ja niiden tiedot
                 if (data.length > 0) {
                     usersDiv.innerHTML = data
                         .map(
@@ -389,11 +417,9 @@ session_start();
             });
         });
 
-    // Define the SearchUsers function to clear input and trigger the input event
-    window.SearchUsers = function() {
+    window.SearchUsers = function() {                                       //tää on sitä varten et fethaa käyttäjät kun painaa show users
         const inputElement = document.getElementById("userSearchInput");
 
-        // Clear the value in the input
         inputElement.value = "";
 
         // Create and dispatch the input event to simulate user interaction
