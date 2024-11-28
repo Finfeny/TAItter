@@ -3,6 +3,8 @@ Twitteri paisti yksjuttu
 
 -delay hakuun
 
+-sendboxin placeholder vois tulla näkyviin vast kun klikkaa siihen
+
 # lautin pyynnöt:
 
 -paksummat postaukset
