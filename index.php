@@ -126,13 +126,7 @@ session_start();
         foreach ($posts as $post) {
             echo "<div class='post'>";
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
-            echo "<div onClick='console.log(`follower " . $_SESSION["user"]["id"] . "\nfollowed " . $user["name"] . "`);";
-                // if (isset($_SESSION["user"])) {
-                //     $sql = "INSERT INTO `follows` (`follower`, `followed`) VALUES (:follower, :followed)";
-                //     $stmt = $conn->prepare($sql);
-                //     $stmt->execute(["follower" => $_SESSION["user"]["id"], "followed" => $user["name"]]);
-                // }
-            echo "'>" . $user["name"] . "</div>" . "<div class='contentRow'>";
+            echo "<div onClick='followPostSender(`". $user["id"] ."`)'>" . $user["name"] . "</div>" . "<div class='contentRow'>";
             if (isset($_SESSION["user"]["id"]) && $post["sender"] == $_SESSION["user"]["id"]) {
                 ?>                                                              <!-- postauksen muokkaus -->
                 <button class="editButton" onclick="
@@ -194,20 +188,22 @@ session_start();
 
 <script>
 
-function followPostSender(senderName) {
+function followPostSender(senderId) {             // Seuraa postauksen lähettäjää
 
     fetch("follow.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ senderName: senderName }),
+        body: JSON.stringify({ senderName: senderId }),
     })
 
     .then((response) => response.json())
     .then((data) => {
         if (data.success) {
-            console.log("Followed post sender:", senderName);
+            console.log("Followed post sender:", senderId);
+        } else if (!data.success) {
+            console.log("Unfollowed post sender:", senderId);
         } else {
             console.error("Error following sender:", data.error);
         }
@@ -241,7 +237,7 @@ function followPostSender(senderName) {
         
 
         posts.forEach((post) => {
-            const postSender = post.firstChild.data;                           // Viestin lähettäjä
+            const postSender = post.firstChild.innerHTML;                           // Viestin lähettäjä
             const content = post.querySelector(".postContent").innerText;           // Viestin sisältö
             const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
             const tags = content.match(/#(\w+)/g) || [];                            // Kaikki tagit
