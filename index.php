@@ -93,11 +93,12 @@ session_start();
     if ($_SESSION != null) {
         ?>
         <div class="filter" id="postFilters">
-            <select id="filterSelect" onChange="filterSelect()">                     <!-- Postausten haku ja filtteröinti -->
+        <select id="filterSelect" onChange="filterSelect()">                     <!-- Postausten haku ja filtteröinti -->
                 <option value="" disabled selected>Filter</option>
                 <option value="All">All</option>
-                <option value="Mentions">Mentions</option>
+                <option value="Following">Following</option>
                 <option value="Mentioned">Mentioned</option>
+                <option value="Mentions">All Mentions</option>
                 <option value="ShowUserPosts" style="display: none">ShowUserPosts</option>
             </select>
             <form action="search_posts.php" method="POST">
