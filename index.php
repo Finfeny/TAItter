@@ -30,7 +30,7 @@ session_start();
         <?php
     }
     ?>
-    <div id="topbar">                               <!-- Yläinfot -->
+    <div id="topbar">             <!-- Ylänapit ja käyttäjän tiedot -->
         <?php
         if (isset($_SESSION["user"])) {
             ?>
@@ -46,7 +46,7 @@ session_start();
                     echo "Logged in as " . $_SESSION["user"]["name"];
                 }
                 else {
-                    ?>
+                    ?>                                  <!-- Rekisteröityminen -->
                     <button id="registerButton" onclick="
                         document.querySelector('#registerButton').style.display = 'none';
                         document.querySelector('#registerForm').style.display = 'block';
@@ -63,7 +63,7 @@ session_start();
             ?>
         </div>
         <?php
-        if (isset($_SESSION["user"])) {                                     // Käyttäjien ja postausten vaihtaminen
+        if (isset($_SESSION["user"])) {                                     // Käyttäjien ja postausten välillä vaihtaminen
             ?>
             <button class="showButton" id="showUserButton" onclick="
                 document.querySelector('#showUserButton').style.display = 'none';
@@ -118,7 +118,7 @@ session_start();
 
     <div id="users" style="display: none"></div>             <!-- Show users -->
     
-    <div id="posts">             <!-- Haetaan viestit databasesta -->
+    <div id="posts">             <!-- Haetaan postaukset databasesta -->
         <?php
             
         $posts = $conn->query("SELECT * FROM `posts`")->fetchAll();
@@ -128,7 +128,7 @@ session_start();
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
             echo $user["name"] . "<br><div class='contentRow'>";
             if (isset($_SESSION["user"]["id"]) && $post["sender"] == $_SESSION["user"]["id"]) {
-                ?>                                                              <!-- Viestin muokkaus -->
+                ?>                                                              <!-- postauksen muokkaus -->
                 <button class="editButton" onclick="
                     this.closest('.post').querySelector('.editButton').style.display = 'none';
                     this.closest('.post').querySelector('.postContent').style.display = 'none';
@@ -145,7 +145,7 @@ session_start();
                 </form>
                 <?php
             }
-            echo "<div class='postContent'>" . $post["content"] . "</div>";     // Viestin sisältö
+            echo "<div class='postContent'>" . $post["content"] . "</div>";     // postauksen sisältö
             if (isset($_SESSION["user"]["id"]) && $post["sender"] == $_SESSION["user"]["id"]) {
                 ?>
                 <form class="postDelete" action="deletepost.php" method="POST">
@@ -159,7 +159,7 @@ session_start();
 
         ?>
     </div>
-    <h1 id="messageBox"></h1>                                         <!-- Virheilmoitukset -->
+    <h1 id="messageBox"></h1>                                         <!-- Virheilmoitukset kuten "No posts found" -->
     <?php
     if (isset($_SESSION["user"])) {
         ?>
@@ -178,8 +178,8 @@ session_start();
                     ></textarea>
                 <input id ="sendbutton" type="submit" value="Send">
             </form>
-            <div id="dropdown" class="dropdown-menu"></div>
-            <div id="alertbox">144 character limit reached</div>
+            <div id="dropdown" class="dropdown-menu"></div>             <!-- Maininta-dropdown -->
+            <div id="alertbox">144 character limit reached</div>            <!-- Viestin pituuden rajotin -->
         </div>
         <?php
     }
@@ -217,15 +217,15 @@ session_start();
             const tags = content.match(/#(\w+)/g) || [];                            // Kaikki tagit
             const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");     // Käyttäjän maininnat
 
+            //Vaihtoehdot filtteröintiin
             switch (filterSelectValue) {
                 
-            case "All":
-                //Vaihtoehdot filtteröintiin
+            case "All":                        //kaikki postaukset
                 post.style.display = "block";
                 gotPosts = true;
                 break;
             
-            case "Mentions": 
+            case "Mentions":                   //kaikki maininnat
                 if (allMentions.length == 0) {
                     post.style.display = "none";
                     break;
@@ -236,7 +236,7 @@ session_start();
                     break;
                 } 
 
-            case "Mentioned":
+            case "Mentioned":                   //missä sinut mainitaan
                 if (currentUserMentions.length == 0) {
                     post.style.display = "none";   
                     break;
@@ -246,7 +246,7 @@ session_start();
                     break;
                 }
 
-            case "ShowUserPosts":
+            case "ShowUserPosts":               //käyttäjän postaukset
                 if (postSender.includes(user)) {
                     post.style.display = "block";
                     gotPosts = true;
