@@ -22,3 +22,7 @@ Twitteri paisti yksjuttu
 - seuratut aihetunnisteet vois vaa filteroida postauksis ja sit niit klikkaamal vois jättää seuraamat aiheita
 
 -Käyttäjä voi hakea postauksia #aihetunnisteen tai @käyttäjänimen perusteella
+
+# Juhanin ongelmat
+
+-voi lähettää toisen nimis postei vaihtamal id inspectoris
