@@ -126,14 +126,20 @@ session_start();
         foreach ($posts as $post) {
             echo "<div class='post'>";
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
-            $isFollowing = $conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"] . " AND followed_id = " . $post['sender'])->fetch();
 
-            echo "<div onClick='followPostSender(`". $user["id"] ."`); ";
-            if ($isFollowing != false) {                                // postauksen lähettäjän seuraaminen
-                echo "alert(`unfollowed user" . $user["name"] . "`)' style='color: yellow'";
+            if ($_SESSION != null) {                                // Käyttäjän seuraaminen
+                $isFollowing = $conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"] . " AND followed_id = " . $post['sender'])->fetch();
+                
+                echo "<div onClick='followPostSender(`". $user["id"] ."`); ";
+                if ($isFollowing != false) {                                // postauksen lähettäjän seuraaminen
+                    echo "alert(`unfollowed user" . $user["name"] . "`)' style='color: yellow'";
+                } else {
+                    echo "alert(`followed user" . $user["name"] . "`)' style='color: white'";
+                }
             } else {
-                echo "alert(`followed user" . $user["name"] . "`)' style='color: white'";
+                echo "<div style='color: white'";
             }
+
             
             echo ">" . $user["name"] . "</div>" . "<div class='contentRow'>";
             if (isset($_SESSION["user"]["id"]) && $post["sender"] == $_SESSION["user"]["id"]) {
