@@ -10,6 +10,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>TAItter</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <?php
@@ -66,24 +67,25 @@ session_start();
         if (isset($_SESSION["user"])) {                                     // Käyttäjien ja postausten välillä vaihtaminen
             ?>
             <button class="showButton" id="showUserButton" onclick="
-                document.querySelector('#showUserButton').style.display = 'none';
-                document.querySelector('#showPostsButton').style.display = 'block';
-                document.querySelector('#posts').style.display = 'none';
-                document.querySelector('#users').style.display = 'flex';
-                document.querySelector('#postFilters').style.display = 'none';
-                document.querySelector('#userFilters').style.display = 'flex';
-                document.querySelector('#sendbox').style.display = 'none';
+                // document.querySelector('#showPostsButton').style.display = 'block';
+                $('#showUserButton').css('display', 'none');
+                $('#showPostsButton').css('display', 'block');
+                $('#posts').css('display', 'none');
+                $('#users').css('display', 'flex');
+                $('#postFilters').css('display', 'none');
+                $('#userFilters').css('display', 'flex');
+                $('#sendbox').css('display', 'none');
                 SearchUsers()
                 ">Show users
             </button>
             <button class="showButton" id="showPostsButton" style="display: none" onclick="
-                document.querySelector('#showUserButton').style.display = 'block';
-                document.querySelector('#showPostsButton').style.display = 'none';
-                document.querySelector('#posts').style.display = 'flex';
-                document.querySelector('#users').style.display = 'none';
-                document.querySelector('#postFilters').style.display = 'flex';
-                document.querySelector('#userFilters').style.display = 'none';
-                document.querySelector('#sendbox').style.display = 'block';
+                $('#showUserButton').css('display', 'block');
+                $('#showPostsButton').css('display', 'none');
+                $('#posts').css('display', 'flex');
+                $('#users').css('display', 'none');
+                $('#postFilters').css('display', 'flex');
+                $('#userFilters').css('display', 'none');
+                $('#sendbox').css('display', 'block');
                 ">Show posts
             <?php
         }
@@ -93,7 +95,7 @@ session_start();
     if ($_SESSION != null) {
         ?>
         <div class="filter" id="postFilters">
-        <select id="filterSelect" onChange="filterSelect()">                     <!-- Postausten haku ja filtteröinti -->
+        <select id="filterSelect" onChange="filterSelect('<?php echo $_SESSION["user"]["id"] ?>')">                     <!-- Postausten haku ja filtteröinti -->
                 <option value="" disabled selected>Filter</option>
                 <option value="All">All</option>
                 <option value="Following">Following</option>
@@ -125,8 +127,8 @@ session_start();
         $posts = $conn->query("SELECT * FROM `posts`")->fetchAll();
         
         foreach ($posts as $post) {
-            echo "<div class='post'>";
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
+            echo "<div class='post' data-post-id='" . $post['id'] . "'>";        // Postauksen id
 
             if ($_SESSION != null) {                                // Käyttäjän seuraaminen
                 $isFollowing = $conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"] . " AND followed_id = " . $post['sender'])->fetch();
@@ -252,6 +254,7 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
         const posts = document.querySelectorAll(".post");
         let gotPosts = false;
         document.getElementById("messageBox").innerText = "";
+        const userFollows = <?php echo json_encode($conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"])->fetchAll()); ?>;
         
 
         posts.forEach((post) => {
@@ -268,6 +271,17 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
                 post.style.display = "block";
                 gotPosts = true;
                 break;
+
+            case "Following":                   //seuraamasi käyttäjät
+                if (userFollows.some((follow) => follow.followed_id == postSender)) {
+                    post.style.display = "block";
+                    gotPosts = true;
+                    break;
+
+                } else {
+                    post.style.display = "none";
+                    break;
+                }
             
             case "Mentions":                   //kaikki maininnat
                 if (allMentions.length == 0) {
@@ -278,7 +292,7 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
                     post.style.display = "block";
                     gotPosts = true;
                     break;
-                } 
+                }
 
             case "Mentioned":                   //missä sinut mainitaan
                 if (currentUserMentions.length == 0) {
