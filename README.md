@@ -3,8 +3,6 @@ Twitteri paisti yksjuttu
 
 -delay hakuun
 
--sendboxin placeholder vois tulla näkyviin vast kun klikkaa siihen
-
 # lautin pyynnöt:
 
 -paksummat postaukset
@@ -14,7 +12,6 @@ Twitteri paisti yksjuttu
 -Käyttäjillä on oletusnäkymä, jossa näytetään sovellukseen tehtyjä postauksia. Näkymässä näytetään postauksia seuraavasti
 
 - Postaukset, joissa on jokin käyttäjän seuraama #aihetunniste
-- Postaukset, jotka on lähettänyt käyttäjän seuraama/tykkäämä @käyttäjä
 
 -Käyttäjällä on näkymä, jossa hän voi tarkastella, lisätä ja poistaa seurattuja #aihetunnisteita ja tykättyjä @käyttäjiä
 
