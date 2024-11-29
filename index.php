@@ -98,7 +98,8 @@ session_start();
         <select id="filterSelect" onChange="filterSelect('<?php echo $_SESSION["user"]["id"] ?>')">                     <!-- Postausten haku ja filtteröinti -->
                 <option value="" disabled selected>Filter</option>
                 <option value="All">All</option>
-                <option value="Following">Following</option>
+                <option value="Followed_users">Followed users</option>
+                <option value="Followed_tags">Followed tags</option>
                 <option value="Mentioned">Mentioned</option>
                 <option value="Mentions">All Mentions</option>
                 <option value="ShowUserPosts" style="display: none">ShowUserPosts</option>
@@ -262,13 +263,17 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
         let gotPosts = false;
         document.getElementById("messageBox").innerText = "";
         const userFollows = <?php echo json_encode($conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"])->fetchAll()); ?>;
-        
+        const tagFollows = <?php echo json_encode($conn->query("SELECT * FROM user_hashtags WHERE user_id = " . $_SESSION["user"]["id"])->fetchAll()); ?>;
 
         posts.forEach((post) => {
             const postSender = post.firstChild.innerHTML;                           // Viestin lähettäjä
             const content = post.querySelector(".postContent").innerText;           // Viestin sisältö
             const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
-            const tags = content.match(/#(\w+)/g) || [];                            // Kaikki tagit
+            const tags = content.match(/#(\w+)/g) || [];                            // Kaikki postauksen tagit
+            const tagsId = <?php echo json_encode($conn->query("SELECT * FROM hashtags")->fetchAll()); ?>;
+            const existingTags = tagsId.find(tagObj => tags.includes("#" + tagObj[1])) || false;
+            const existingTagsId = existingTags.hashtag_id || false;
+
             const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");     // Käyttäjän maininnat
             
             //Vaihtoehdot filtteröintiin
@@ -279,9 +284,21 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
                 gotPosts = true;
                 break;
 
-            case "Following":                   //seuraamasi käyttäjät
+            case "Followed_users":                   //seuraamasi käyttäjät
                 // console.log($(post).data("userid"));
-                if (userFollows.some((follow) => follow.followed_id == $(post).data("userid"))) {
+                if (userFollows.some(follow => follow.followed_id == $(post).data("userid"))) {
+                    post.style.display = "block";
+                    gotPosts = true;
+                    break;
+
+                } else {
+                    post.style.display = "none";
+                    break;
+                }
+                
+            case "Followed_tags":                   //seuraamasi tagit
+                // tagFollows[0].hashtag_id == existingTagsId
+                if (tagFollows.some(tag => tag.hashtag_id == existingTagsId)) {
                     post.style.display = "block";
                     gotPosts = true;
                     break;
