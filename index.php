@@ -234,24 +234,31 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
 
     function showUserPosts(user) {             // Näyttää käyttäjän postaukset
 
-        document.querySelector('#showUserButton').style.display = 'none';
-        document.querySelector('#showPostsButton').style.display = 'block';
-        document.querySelector('#posts').style.display = 'flex';
-        document.querySelector('#users').style.display = 'none';
-        document.querySelector('#postFilters').style.display = 'flex';
-        document.querySelector('#userFilters').style.display = 'none';
-        document.querySelector('#sendbox').style.display = 'block';
+        $('#showUserButton').css('display', 'none');
+        $('#showUserButton').css('display', 'none');
+        $('#showPostsButton').css('display', 'block');
+        $('#posts').css('display', 'flex');
+        $('#users').css('display', 'none');
+        $('#postFilters').css('display', 'flex');
+        $('#userFilters').css('display', 'none');
+        $('#sendbox').css('display', 'block');
         
-        document.getElementById("filterSelect").value = "ShowUserPosts";        // tää kyseinen vaihtaa filteri selectin valueks käyttäjän postaukset
-        document.getElementById("showPostsButton").style.display = "none";
-        document.getElementById("showUserButton").style.display = "block";
+        $("#showPostsButton").css('display', "none");
+        $("#showUserButton").css('display', "block");
+        $("#filterSelect").val("ShowUserPosts");
         filterSelect(user);
     }
 
     function filterSelect(user) {
         // console.log(user);
-        const filterSelectValue = document.getElementById("filterSelect").value;
-        const posts = document.querySelectorAll(".post");
+        // const filterSelectValue = document.getElementById("filterSelect").value;
+        const filterSelectValue = $("#filterSelect").val();
+        
+        const posts = document.querySelectorAll(".post");       // perus querySelector tapa
+
+        // const postsObj = $(".post");             // jos hakee jqueryl ni pitää muuttaa objecti arrayks
+        // const posts = Object.keys(postsObj).map(function (key) {return postsObj[key]})
+        
         let gotPosts = false;
         document.getElementById("messageBox").innerText = "";
         const userFollows = <?php echo json_encode($conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"])->fetchAll()); ?>;
