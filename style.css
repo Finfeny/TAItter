@@ -12,6 +12,13 @@ body {
     color: #FFFF;
 }
 
+a {
+    color: #9bc5ea;
+}
+a:visited {
+    color: #9bc5ea;
+}
+
 #login {
     padding-top: 40px;
 }
