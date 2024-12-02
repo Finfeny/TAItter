@@ -129,15 +129,26 @@ session_start();
         
         foreach ($posts as $post) {
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
-            // $isFollowingTag = $conn->query("SELECT * FROM user_hashtags WHERE user_id = " . $_SESSION["user"]["id"] . " AND hashtag_id = " . $post['hashtag_id'])->fetch();
+
+            // Katsoo seuraako käyttäjä postauksen tagia
+            $postTags = $conn->query("SELECT * FROM post_hashtags WHERE post_id = " . $post['id'])->fetch();
+            if ($postTags) {
+                $isFollowingPostTagsQuery = $conn->prepare("SELECT * FROM user_hashtags WHERE user_id = :user_id AND hashtag_id = :hashtag_id");
+                $isFollowingPostTagsQuery->execute([
+                    "user_id" => $_SESSION["user"]["id"], 
+                    "hashtag_id" => $postTags["hashtag_id"]
+                ]);
+                $isFollowingPostTags = $isFollowingPostTagsQuery->fetch(PDO::FETCH_ASSOC);
+            }
+
 
             echo "<div class='post' data-post-id='" . $post['id'] . "' data-userid=" . $user["id"] . ">";
 
             if ($_SESSION != null) {                                // Käyttäjän seuraaminen
-                $isFollowing = $conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"] . " AND followed_id = " . $post['sender'])->fetch();
+                $isFollowingPostSender = $conn->query("SELECT * FROM follows WHERE follower_id = " . $_SESSION["user"]["id"] . " AND followed_id = " . $post['sender'])->fetch();
                 
                 echo "<div onClick='followPostSender(`". $user["id"] ."`); ";
-                if ($isFollowing != false) {                                // postauksen lähettäjän seuraaminen
+                if ($isFollowingPostSender != false) {                                // postauksen lähettäjän seuraaminen
                     echo "alert(`unfollowed user" . $user["name"] . "`)' style='color: yellow'";
                 } else {
                     echo "alert(`followed user" . $user["name"] . "`)' style='color: white'";
@@ -166,6 +177,31 @@ session_start();
                 </form>
                 <?php
             }
+            
+            if (preg_match_all('/#(\w+)/', $post["content"], $matches)) {
+                $hashtags = $matches[0];
+            
+                // Vaihtaa hashtagit <a> tagiksi
+                foreach ($hashtags as $hashtag) {
+                    $hashtagText = substr($hashtag, 1); // Poistaa "#" merkin
+
+                    // Katsoo seuraako käyttäjä postauksen tagia ja laittaa linkin hashtagiin
+                    if ($isFollowingPostTags != false) {
+                        $post["content"] = str_replace(
+                            $hashtag,
+                            "<a href='follow_tag.php?tag=" . $hashtagText . "' style='color: #8fff8f'>" . $hashtag . "</a>",
+                            $post["content"]
+                        );
+                    } else {
+                        $post["content"] = str_replace(
+                            $hashtag,
+                            "<a href='follow_tag.php?tag=" . $hashtagText . "' style='color: #9bc5e'>" . $hashtag . "</a>",
+                            $post["content"]
+                        );
+                    }
+                }
+            }
+
             echo "<div class='postContent'>" . $post["content"] . "</div>";     // postauksen sisältö
             if (isset($_SESSION["user"]["id"]) && $post["sender"] == $_SESSION["user"]["id"]) {
                 ?>

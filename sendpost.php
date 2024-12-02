@@ -34,24 +34,14 @@ if ($content) {
         // Extract hashtags
         $hashtags = $matches[1]; //                              Check for hashtags
         $hashtagsWithHash = $matches[0]; // Array of hashtags with '#'
-        echo "<br>";
 
         var_dump("content", $content);
         echo "<br>";
         var_dump("hashtags", $hashtags);
         echo "<br>";
         var_dump("hashtagsWithHash", $hashtagsWithHash);
+        echo "<br>";
         
-        echo "<br>";
-        foreach ($hashtagsWithHash as $i => $hashtag) {
-            var_dump($i);
-            echo "<br>";
-            // Build the URL and replace in content
-            $url = "follow_tag.php?tag=" . urlencode($hashtags[$i]);
-            $content = str_replace($hashtag, "<a href='$url'>$hashtag</a>", $content
-            );
-        }
-        echo "<br>";
         var_dump("new content", $content);
         echo "<br>";
         
