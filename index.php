@@ -129,6 +129,8 @@ session_start();
         
         foreach ($posts as $post) {
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
+            // $isFollowingTag = $conn->query("SELECT * FROM user_hashtags WHERE user_id = " . $_SESSION["user"]["id"] . " AND hashtag_id = " . $post['hashtag_id'])->fetch();
+
             echo "<div class='post' data-post-id='" . $post['id'] . "' data-userid=" . $user["id"] . ">";
 
             if ($_SESSION != null) {                                // Käyttäjän seuraaminen
@@ -184,7 +186,6 @@ session_start();
         ?>
         <div id="sendbox">                                              <!-- Viestin lähetys -->
             <form action="sendpost.php" method="POST" id="sendboxForm">
-                <input type="hidden" name="sender" value="<?php echo $_SESSION["user"]["id"] ?>">
                 <textarea
                     rows="2"
                     cols="25"
@@ -271,7 +272,7 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
             const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
             const tags = content.match(/#(\w+)/g) || [];                            // Kaikki postauksen tagit
             const tagsId = <?php echo json_encode($conn->query("SELECT * FROM hashtags")->fetchAll()); ?>;
-            const existingTags = tagsId.find(tagObj => tags.includes("#" + tagObj[1])) || false;
+            const existingTags = tagsId.find(tagObj => tags.includes("#" + tagObj.tag)) || false;
             const existingTagsId = existingTags.hashtag_id || false;
 
             const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");     // Käyttäjän maininnat
