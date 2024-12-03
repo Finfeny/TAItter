@@ -6,35 +6,13 @@ $sender = $_SESSION["user"]["id"];
 
 if ($content) {
     
-    //                                                          Check for mentions in the content
-    if (preg_match_all('/@(\w+)/', $content, $matches)) {
-        
-        // Extract mentioned usernames
-        $mentioned_users = $matches[1]; // Array of usernames after '@'
-        
-        foreach ($mentioned_users as $username) {
-            // Look up the user ID of the mentioned username
-            $user_query = $conn->prepare("SELECT id FROM users WHERE name = :username");
-            $user_query->execute(["username" => $username]);
-            $mentioned_user = $user_query->fetch(PDO::FETCH_ASSOC);
-            
-            if ($mentioned_user) {
-                // Add the mention to the `mentions` table
-                $mention_query = $conn->prepare("INSERT INTO `mentions` (post_id, mentioned_user) VALUES (:post_id, :mentioned_user)");
-                $mention_query->execute([
-                    "post_id" => $post_id,
-                    "mentioned_user" => $mentioned_user['id']
-                ]);
-            }
-        }
-    }
     
     if (preg_match_all('/#(\w+)/', $content, $matches)) {
 
         // Extract hashtags
         $hashtags = $matches[1]; //                              Check for hashtags
         $hashtagsWithHash = $matches[0]; // Array of hashtags with '#'
-
+        
         var_dump("content", $content);
         echo "<br>";
         var_dump("hashtags", $hashtags);
@@ -69,14 +47,14 @@ if ($content) {
         "sender" => $sender,
         "content" => $content
     ]);
-
+    
     //  Get the last inserted post ID
     $post_id = $conn->lastInsertId();
     var_dump("postId", $post_id);
     echo "<br>";
-
+    
     // add hashtags to the post_hashtags table if tags exist
-
+    
     if ($hashtags) {
         foreach ($hashtags as $hashtag) {
             $hashtag_query = $conn->prepare("SELECT hashtag_id FROM hashtags WHERE tag = :hashtag");
@@ -91,6 +69,28 @@ if ($content) {
         }
     }
     
+    //                                                          Check for mentions in the content
+    if (preg_match_all('/@(\w+)/', $content, $matches)) {
+        
+        // Extract mentioned usernames
+        $mentioned_users = $matches[1]; // Array of usernames after '@'
+        
+        foreach ($mentioned_users as $username) {
+            // Look up the user ID of the mentioned username
+            $user_query = $conn->prepare("SELECT id FROM users WHERE name = :username");
+            $user_query->execute(["username" => $username]);
+            $mentioned_user = $user_query->fetch(PDO::FETCH_ASSOC);
+            
+            if ($mentioned_user) {
+                // Add the mention to the `mentions` table
+                $mention_query = $conn->prepare("INSERT INTO `mentions` (post_id, mentioned_user) VALUES (:post_id, :mentioned_user)");
+                $mention_query->execute([
+                    "post_id" => $post_id,
+                    "mentioned_user" => $mentioned_user['id']
+                ]);
+            }
+        }
+    }
 }
 header("Location: index.php");
 ?>

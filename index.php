@@ -104,10 +104,11 @@ session_start();
                 <option value="Mentions">All Mentions</option>
                 <option value="ShowUserPosts" style="display: none">ShowUserPosts</option>
             </select>
-            <form action="search_posts.php" method="POST">
+            <!-- haku postauksista ei tee ny mitää ni sen voi tehä jos haluu mut ei tarvii-->
+            <!-- <form action="search_posts.php" method="POST">
                 <input class="searchInput" type="text" name="search" id="postSearchInput" placeholder="Search posts by @users">
                 <input type="submit" value="Search">
-            </form>
+            </form> -->
             <select id="sortSelect" onChange="sortSelect()">
                 <option value="Newest">Newest</option>
                 <option value="Oldest">Oldest</option>
@@ -131,15 +132,21 @@ session_start();
             $user = $conn->query("SELECT * FROM `users` WHERE `id` = " . $post['sender'])->fetch();
 
             // Katsoo seuraako käyttäjä postauksen tagia
-            $postTags = $conn->query("SELECT * FROM post_hashtags WHERE post_id = " . $post['id'])->fetch();
-            if ($postTags) {
-                $isFollowingPostTagsQuery = $conn->prepare("SELECT * FROM user_hashtags WHERE user_id = :user_id AND hashtag_id = :hashtag_id");
+            $postTags = $conn->query("SELECT * FROM post_hashtags WHERE post_id = " . $post['id'])->fetchAll();
+            // echo "<pre>";
+            // print_r($postTags, false);
+            // echo "</pre>";
+            $isFollowingPostTags = [];
+            foreach ($postTags as $tag) {
+                $isFollowingPostTagsQuery = $conn->prepare(
+                "SELECT * FROM user_hashtags WHERE user_id = :user_id AND hashtag_id = :hashtag_id");
                 $isFollowingPostTagsQuery->execute([
                     "user_id" => $_SESSION["user"]["id"], 
-                    "hashtag_id" => $postTags["hashtag_id"]
+                    "hashtag_id" => $tag["hashtag_id"]
                 ]);
-                $isFollowingPostTags = $isFollowingPostTagsQuery->fetch(PDO::FETCH_ASSOC);
-            }
+                // $isFollowingPostTags = $isFollowingPostTagsQuery->fetch(PDO::FETCH_ASSOC);
+                $isFollowingPostTags[] = $isFollowingPostTagsQuery->fetch(PDO::FETCH_ASSOC);
+            };
 
 
             echo "<div class='post' data-post-id='" . $post['id'] . "' data-userid=" . $user["id"] . ">";
@@ -178,15 +185,18 @@ session_start();
                 <?php
             }
             
+            // Vaihtaa hashtagit <a> tagiksi
             if (preg_match_all('/#(\w+)/', $post["content"], $matches)) {
                 $hashtags = $matches[0];
-            
-                // Vaihtaa hashtagit <a> tagiksi
-                foreach ($hashtags as $hashtag) {
+                for ($i = 0; $i < count($hashtags); $i++) {
+                    
+                    $hashtag = $hashtags[$i];
+                    $isFollowingPostTag = $isFollowingPostTags[$i]; 
+                    
                     $hashtagText = substr($hashtag, 1); // Poistaa "#" merkin
-
+                    
                     // Katsoo seuraako käyttäjä postauksen tagia ja laittaa linkin hashtagiin
-                    if ($isFollowingPostTags != false) {
+                    if ($isFollowingPostTag) {
                         $post["content"] = str_replace(
                             $hashtag,
                             "<a href='follow_tag.php?tag=" . $hashtagText . "' style='color: #8fff8f'>" . $hashtag . "</a>",
@@ -288,7 +298,6 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
     }
 
     function filterSelect(user) {
-        // console.log(user);
         // const filterSelectValue = document.getElementById("filterSelect").value;
         const filterSelectValue = $("#filterSelect").val();
         
@@ -308,8 +317,8 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
             const allMentions = content.match(/@(\w+)/g) || [];                     // Kaikki maininnat
             const tags = content.match(/#(\w+)/g) || [];                            // Kaikki postauksen tagit
             const tagsId = <?php echo json_encode($conn->query("SELECT * FROM hashtags")->fetchAll()); ?>;
-            const existingTags = tagsId.find(tagObj => tags.includes("#" + tagObj.tag)) || false;
-            const existingTagsId = existingTags.hashtag_id || false;
+            const existingTags = tagsId.filter(tagObj => tags.includes("#" + tagObj.tag)) || false;
+            const existingTagsId = existingTags.map(tagObj => tagObj.hashtag_id) || false;
 
             const currentUserMentions = allMentions.filter((mention) => mention.slice(1) == "<?php echo $_SESSION["user"]["name"] ?>");     // Käyttäjän maininnat
             
@@ -322,7 +331,6 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
                 break;
 
             case "Followed_users":                   //seuraamasi käyttäjät
-                // console.log($(post).data("userid"));
                 if (userFollows.some(follow => follow.followed_id == $(post).data("userid"))) {
                     post.style.display = "block";
                     gotPosts = true;
@@ -334,8 +342,7 @@ function followPostSender(senderId) {             // Seuraa postauksen lähettä
                 }
                 
             case "Followed_tags":                   //seuraamasi tagit
-                // tagFollows[0].hashtag_id == existingTagsId
-                if (tagFollows.some(tag => tag.hashtag_id == existingTagsId)) {
+                if (tagFollows.some(tag => existingTagsId.includes(tag.hashtag_id))) {
                     post.style.display = "block";
                     gotPosts = true;
                     break;

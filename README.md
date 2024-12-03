@@ -23,3 +23,22 @@ Twitteri paisti yksjuttu
 # Juhanin ongelmat
 
 -voi lähettää toisen nimis postei vaihtamal id inspectoris
+
+
+SELECT post_hashtags.post_id, post_hashtags.hashtag_id, hashtags.tag FROM `post_hashtags`
+JOIN user_hashtags
+ON user_hashtags.hashtag_id = post_hashtags.hashtag_id
+JOIN hashtags
+ON hashtags.hashtag_id = post_hashtags.hashtag_id
+WHERE post_id = 66;
+
+Valitaan postin x tagit
+Valitaan tägeistä ne, joita käyttäjä y seuraa
+Haetaan seurattujen tägien teksti
+
+SELECT post_hashtags.post_id, post_hashtags.hashtag_id, hashtags.tag 
+FROM post_hashtags
+JOIN user_hashtags ON user_hashtags.hashtag_id = post_hashtags.hashtag_id
+JOIN hashtags ON hashtags.hashtag_id = post_hashtags.hashtag_id
+WHERE post_hashtags.post_id = :post_id
+AND user_hashtags.user_id = :user_id;
