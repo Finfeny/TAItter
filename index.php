@@ -24,7 +24,9 @@ session_start();
             </button>
             <form id="loginForm" action="login.php" method="POST" style="display: none">
                 <input class ="inputbox" type="email" name="email" id="email" placeholder="Email">
+                <br><br>
                 <input class ="inputbox" type="password" name="password" id="password" placeholder="Password">
+                <br><br>
                 <input id ="sendbutton" type="submit" value="Login">
             </form>
         </div>
@@ -55,8 +57,11 @@ session_start();
                     </button>
                     <form action="register.php" method="POST" id="registerForm" style="display: none">
                         <input class ="inputbox" type="text" name="name" id="name" placeholder="Name">
+                        <br>
                         <input class ="inputbox" type="email" name="email" id="email" placeholder="Email">
+                        <br>
                         <input class ="inputbox" type="password" name="password" id="password" placeholder="Password">
+                        <br>
                         <input id ="sendbutton" type="submit" value="Register">
                     </form>
                     <?php
@@ -138,6 +143,10 @@ session_start();
             // echo "</pre>";
             $isFollowingPostTags = [];
             foreach ($postTags as $tag) {
+                if ($_SESSION == null) {
+                    $isFollowingPostTags[] = false;
+                    continue;
+                }
                 $isFollowingPostTagsQuery = $conn->prepare(
                 "SELECT * FROM user_hashtags WHERE user_id = :user_id AND hashtag_id = :hashtag_id");
                 $isFollowingPostTagsQuery->execute([
@@ -217,7 +226,7 @@ session_start();
                 ?>
                 <form class="postDelete" action="deletepost.php" method="POST">
                     <input type="hidden" name="id" value="<?php echo $post['id'] ?>">
-                    <input type="submit" value="Delete">
+                    <input class="postDeleteButton" type="submit" value="Delete">
                 </form>
                 <?php
             }

@@ -2,6 +2,11 @@
 include 'dbyhteys.php';
 session_start();
 
+if (!isset($_SESSION["user"])) {
+    header("Location: index.php");
+    die();
+}
+
 $tag = $_GET["tag"];
 $user_id = $_SESSION["user"]["id"];
 

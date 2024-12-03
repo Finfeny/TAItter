@@ -25,10 +25,10 @@ a:visited {
 
 #loginButton {
     margin-top: 20px;
-    background-color: rgb(73, 230, 230);
+    background-color: rgb(0, 117, 174);;
     padding: 10px;
-    font-size: 1.5vw;
-    color: rgb(140, 0, 255);
+    font-size: 20px;
+    color: #FFFF;
     border-radius: 5px;
     border: none;
 }
@@ -36,35 +36,35 @@ a:visited {
 #topbar {
     display: flex;
     justify-content: space-around;
-    padding-block: 20px;
+    padding-block: 10px;
 }
 
 .showButton {
-    margin-top: 20px;
-    background-color: rgb(73, 230, 230);
+    margin-block: 20px;
+    background-color: rgb(0, 117, 174);;
     padding: 10px;
-    font-size: 1.5vw;
-    color: rgb(140, 0, 255);
+    font-size: 15px;
+    color: #FFFF;
     border-radius: 5px;
     border: none;
 }
 
 #logoutButton {
     margin-top: 20px;
-    background-color: rgb(73, 230, 230);
+    background-color: rgb(0, 117, 174);;
     padding: 10px;
-    font-size: 1.5vw;
-    color: rgb(140, 0, 255);
+    font-size: 15px;
+    color: #FFFF;
     border-radius: 5px;
     border: none;
 }
 
 #registerButton {
     margin-block: 20px;
-    background-color: rgb(73, 230, 230);
+    background-color: rgb(0, 117, 174);;
     padding: 10px;
-    font-size: 1.5vw;
-    color: rgb(140, 0, 255);
+    font-size: 20px;
+    color: #FFFF;
     border-radius: 5px;
     border: none;
 }
@@ -75,7 +75,7 @@ a:visited {
 
 #user {
     color:#db0000;
-    font-size: xx-large;
+    font-size: 40px;
     padding: 10px;
 }
 
@@ -109,7 +109,7 @@ a:visited {
     justify-content: space-evenly;
     flex-wrap: wrap;
     gap: 70px;
-    padding-inline: 100px;
+    padding-inline: 1vw;
     padding-bottom: 160px;
 }
 
@@ -171,7 +171,7 @@ a:visited {
 
 #sendInputbox {
     background-color: rgb(98, 116, 177);
-    width: 40%;
+    width: 60%;
     max-width: 350px;
     height: 120px;
     border-radius: 0.1vh;
@@ -197,6 +197,14 @@ a:visited {
     justify-content: space-around;
     margin: 10px;
     text-align: center;
+}
+
+.postContent {
+    padding: 10px;
+}
+
+.postDeleteButton {
+    padding: 10px;
 }
 
 .dropdown-menu {
@@ -239,4 +247,10 @@ a:visited {
 
 .dropdown-menu div:hover {
     background-color: #36426b;;
+}
+
+@media screen and (max-width: 800px) {
+    #user {
+        font-size: 5vw;
+    }
 }
