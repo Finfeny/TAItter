@@ -42,8 +42,8 @@ session_start();
             </form>
             <?php
         }
-        ?>
-        <div id="user">                             <!-- Käyttäjän tiedot -->
+        ?>                                       <!-- Käyttäjän tiedot -->
+        <div id="user" onClick="SimoTarviiTöit()">
             <?php
                 if (isset($_SESSION["user"])) {
                     echo "Logged in as " . $_SESSION["user"]["name"];
@@ -262,6 +262,95 @@ session_start();
 </body>
 
 <script>
+
+    function SimoTarviiTöit() {
+        if (document.body.style.backgroundImage == 'url("./pics/frogger.jpg")') {
+            document.body.style.backgroundImage = 'url(./pics/image-cache.jpg)';
+            document.getElementById("logoutButton").style.color = "rgb(255, 255, 255)";
+            document.getElementById("logoutButton").style.backgroundColor = "rgb(0, 0, 0)";
+            document.getElementById("logoutButton").style.fontWeight = "1000";
+
+            document.getElementById("user").style.color = "rgb(255, 255, 255)";
+            
+            document.getElementById("showUserButton").style.color = "rgb(255, 255, 255)";
+            document.getElementById("showUserButton").style.backgroundColor = "rgb(0, 0, 0)";
+            document.getElementById("showUserButton").style.fontWeight = "1000";
+
+            document.getElementById("showPostsButton").style.color = "rgb(255, 255, 255)";
+            document.getElementById("showPostsButton").style.backgroundColor = "rgb(0, 0, 0)";
+            document.getElementById("showPostsButton").style.fontWeight = "1000";
+
+            document.getElementById("filterSelect").style.color = "rgb(255, 255, 255)";
+            document.getElementById("filterSelect").style.backgroundColor = "rgb(0, 0, 0)";
+            document.getElementById("filterSelect").style.border = "none";
+
+            document.getElementById("sortSelect").style.color = "rgb(255, 255, 255)";
+            document.getElementById("sortSelect").style.backgroundColor = "rgb(0, 0, 0)";
+            document.getElementById("sortSelect").style.border = "none";
+
+            document.getElementById("userSearchInput").style.color = "rgb(255, 255, 255)";
+            document.getElementById("userSearchInput").style.backgroundColor = "rgb(0, 0, 0)";
+            document.getElementById("userSearchInput").style.border = "none";
+
+            document.querySelectorAll(".post").forEach(post => {
+                post.style.color = "rgb(255, 255, 255)";
+                post.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            });
+
+            
+        } else {
+            document.body.style.backgroundImage = 'url(./pics/frogger.jpg)';
+            document.getElementById("logoutButton").style.color = "rgb(140, 0, 255)";
+            document.getElementById("logoutButton").style.backgroundColor = "rgb(73, 230, 230)";
+            document.getElementById("logoutButton").style.fontWeight = "1000";
+            
+            document.getElementById("user").style.color = "#db0000";
+            
+            document.getElementById("showUserButton").style.color = "rgb(140, 0, 255)";
+            document.getElementById("showUserButton").style.backgroundColor = "rgb(73, 230, 230)";
+            document.getElementById("showUserButton").style.fontWeight = "1000";
+            
+            document.getElementById("showPostsButton").style.color = "rgb(140, 0, 255)";
+            document.getElementById("showPostsButton").style.backgroundColor = "rgb(73, 230, 230)";
+            document.getElementById("showPostsButton").style.fontWeight = "1000";
+            
+            document.getElementById("filterSelect").style.color = "rgb(140, 0, 255)";
+            document.getElementById("filterSelect").style.backgroundColor = "#FFFF";
+            document.getElementById("filterSelect").style.border = "none";
+            
+            document.getElementById("sortSelect").style.color = "rgb(140, 0, 255)";
+            document.getElementById("sortSelect").style.backgroundColor = "rgb(139, 255, 22)";
+            document.getElementById("sortSelect").style.border = "none";
+            
+            document.getElementById("userSearchInput").style.color = "rgb(140, 0, 255)";
+            document.getElementById("userSearchInput").style.backgroundColor = "rgb(0, 195, 255)";
+            document.getElementById("userSearchInput").style.border = "none";
+
+            document.getElementById("alertbox").style.color = "rgb(140, 0, 255)";
+            document.getElementById("alertbox").style.backgroundColor = "rgb(255, 254, 254)";
+
+            document.getElementById("sendInputbox").style.color = "rgb(140, 0, 255)";
+            document.getElementById("sendInputbox").style.backgroundColor = "rgb(255, 254, 254)";
+
+            document.getElementById("sendbutton").style.color = "rgb(140, 0, 255)";
+            document.getElementById("sendbutton").style.backgroundColor = "rgb(73, 230, 230)";
+            document.getElementById("sendbutton").style.fontWeight = "1000";
+
+            document.getElementById("dropdown").style.color = "rgb(140, 0, 255)";
+            document.getElementById("dropdown").style.backgroundColor = "rgb(73, 230, 230)";
+
+            
+            document.querySelectorAll(".post").forEach(post => {
+                post.style.color = "rgb(140, 0, 255)";
+                post.style.backgroundColor = "rgba(255, 254, 254, 0.5)";
+            });
+
+            document.querySelectorAll(".user").forEach(user => {
+                user.style.color = "rgb(140, 0, 255)";
+                user.style.backgroundColor = "rgba(255, 254, 254, 0.5)";
+            });
+        }
+    }
 
 function followPostSender(senderId) {             // Seuraa postauksen lähettäjää
 
